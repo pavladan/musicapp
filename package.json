@@ -1,0 +1,9 @@
+{
+  "name": "musicapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "serve": "cd server && yarn serve || cd client && yarn dev"
+  }
+}
