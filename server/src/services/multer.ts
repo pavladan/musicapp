@@ -1,4 +1,5 @@
-const multer = require("multer");
+import multer from "multer";
+import { Request, Express } from "express";
 
 const storage = multer.diskStorage({
   destination: (req, res, cb) => {
@@ -8,7 +9,11 @@ const storage = multer.diskStorage({
     cb(null, `${new Date().getTime()}_${file.originalname}`);
   },
 });
-const fileFilter = (req, file, cb) => {
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: (error: Error, destination: boolean) => void
+) => {
   if (
     ["audio/mpeg", "audio/wave", "audio/wav", "audio/mp3"].some(
       (mimetype) => mimetype === file.mimetype
@@ -19,7 +24,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-exports.upload = multer({
+export default multer({
   storage,
   limits: {
     fileSize: 1024 * 1024 * 5,
