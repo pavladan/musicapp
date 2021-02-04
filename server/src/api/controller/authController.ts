@@ -1,5 +1,5 @@
 import { IUser } from "../models/Users";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import passport from "../../passport";
 
 const getUser = async (req: Request, res: Response) => {
@@ -12,7 +12,9 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
-const register = (req: Request, res: Response, next: () => void) => {
+const login = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body);
+
   passport.authenticate("local", function (err: any, user: IUser) {
     if (err) {
       return res.status(400).json({ errors: err });
@@ -34,7 +36,7 @@ const logout = (req: Request, res: Response) => {
   return res.send();
 };
 export default {
-  register,
+  login,
   logout,
   getUser,
 };

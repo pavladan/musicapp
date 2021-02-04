@@ -14,6 +14,8 @@ export default {
     }
   },
   addNewTrack: async (req: Request, res: Response) => {
+    // @ts-ignore
+    console.log(req.file);
     try {
       const track = new Track({
         title: req.body.title,
