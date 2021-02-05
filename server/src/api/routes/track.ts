@@ -1,12 +1,22 @@
 import { Router } from "express";
-import musicController from "../controller/trackController";
+import trackController from "../controller/trackController";
 import upload from "../../services/multer";
+import authorAccessMiddleware from "../../middlewares/authorAccessMiddleware";
+import Track from "../models/Track";
+import isUserAuthenticatedMiddleware from "../../middlewares/isUserAuthenticatedMiddleware";
 
 const router = Router();
 
-router.get("/", musicController.getAllTracks);
-router.post("/", upload.single("track"), musicController.addNewTrack);
-router.delete("/:trackId", musicController.deleteTrack);
-router.get("/:trackId", musicController.getTrack);
+router.post(
+  "/",
+  [isUserAuthenticatedMiddleware, upload.single("track")],
+  trackController.addNewTrack
+);
+router.get("/:trackId", trackController.getTrackInfo);
+router.delete(
+  "/:trackId",
+  authorAccessMiddleware(Track, "trackId"),
+  trackController.deleteTrack
+);
 
 export default router;

@@ -12,6 +12,8 @@ import connectMongo from "connect-mongo";
 import authRoutes from "./api/routes/auth";
 import trackRoutes from "./api/routes/track";
 import passport from "./passport";
+import playlistRoutes from "./api/routes/playlist";
+import userRouter from "./api/routes/user";
 
 dotenv.config();
 const app = express();
@@ -31,6 +33,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false,
   })
   .then(() => {
     console.log("Database is connected");
@@ -55,8 +58,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/v1/track", trackRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/track", trackRoutes);
+app.use("/api/v1/playlist", playlistRoutes);
+
 app.get("/api/v1/", (req, res) => {
   res.json("Hola MENV devs... Assemble");
 });

@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "npm-run-all clean tsc",
     "start": "node dist",
-    "dev": "ts-node-dev .",
+    "dev": "ts-node-dev --files src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fs-extra": "^9.1.0",
-    "mongoose": "^5.11.14",
+    "mongoose": "^5.11.15",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "nodemon": "^2.0.7",
@@ -40,7 +40,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.11",
-    "@types/express-session": "^1.17.3",
+    "@types/express-session": "1.17.0",
     "@types/fs-extra": "^9.0.6",
     "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.5",
