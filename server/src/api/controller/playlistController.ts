@@ -29,12 +29,9 @@ export default {
   get: async (req: Request<{ playlistId: string }>, res: Response) => {
     try {
       const playlist = await Playlist.findById(req.params.playlistId).exec();
-      const tracks = await Track.find({
-        _id: { $in: [...playlist.trackList.map((track) => track.trackId)] },
-      }).exec();
       res.status(200).json(playlist);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json(err);
     }
   },

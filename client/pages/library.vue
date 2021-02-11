@@ -96,7 +96,7 @@ export default {
     async getAllMusics() {
       this.musicLoading = true
       try {
-        this.allMusic = await this.$axios.$get('/track')
+        this.allMusic = await this.$axios.$get('/user/tracks')
         this.musicLoading = false
       } catch (err) {
         this.musicLoading = false

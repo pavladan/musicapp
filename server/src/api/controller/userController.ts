@@ -18,7 +18,7 @@ export default {
       const found = await Playlist.find({ authorId: userId }).exec();
       res.status(200).json(found);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json(err);
     }
   },

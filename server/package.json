@@ -9,7 +9,7 @@
     "build": "npm-run-all clean tsc",
     "start": "node dist",
     "dev": "ts-node-dev --files src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "yarn jest"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -42,6 +42,8 @@
     "@types/express": "^4.17.11",
     "@types/express-session": "1.17.0",
     "@types/fs-extra": "^9.0.6",
+    "@types/jest": "^26.0.20",
+    "@types/mocha": "^8.2.0",
     "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.5",
     "@types/node": "^14.14.22",
@@ -49,6 +51,8 @@
     "@types/shelljs": "^0.8.8",
     "@types/socket.io": "^2.1.13",
     "@types/swagger-ui-express": "^4.1.2",
-    "@types/throttle": "^1.0.0"
+    "@types/throttle": "^1.0.0",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.1"
   }
 }

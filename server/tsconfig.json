@@ -8,16 +8,13 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "*": [
-        "node_modules/*"
-      ]
-    },
-    "typeRoots": [
-      "./src/types/*"
+    "types": [
+      "@types/jest"
     ],
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "typeRoots": ["./src/types/*"]
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

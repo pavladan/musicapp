@@ -6,7 +6,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import SocketIO from "socket.io";
-import initListeners from "./socket";
+import initSocketListeners from "./socket";
 import session from "express-session";
 import connectMongo from "connect-mongo";
 import authRoutes from "./api/routes/auth";
@@ -14,6 +14,7 @@ import trackRoutes from "./api/routes/track";
 import passport from "./passport";
 import playlistRoutes from "./api/routes/playlist";
 import userRouter from "./api/routes/user";
+import initDbListeners from "./db";
 
 dotenv.config();
 const app = express();
@@ -36,10 +37,10 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log("Database is connected");
+    console.info("Database is connected");
   })
   .catch((err) => {
-    console.log({ database_error: err });
+    console.error({ database_error: err });
   });
 
 app.use(cors());
@@ -67,8 +68,9 @@ app.get("/api/v1/", (req, res) => {
   res.json("Hola MENV devs... Assemble");
 });
 
-// initListeners(io);
+initSocketListeners(io);
+initDbListeners();
 
 server.listen(PORT, () => {
-  console.log(`App is running on ${PORT}`);
+  console.info(`App is running on ${PORT}`);
 });
