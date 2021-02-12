@@ -1,18 +1,38 @@
 import { Router } from "express";
-import userController from "../controller/userController";
-import isUserAuthenticatedMiddleware from "../../middlewares/isUserAuthenticatedMiddleware";
-const router = Router();
+import userController from "../../controller/user";
+import isAuth from "../middlewares/isAuth";
+import { Request } from "express";
+const route = Router();
 
-router.get("/", userController.getUser);
-router.get(
-  "/tracks",
-  isUserAuthenticatedMiddleware,
-  userController.getUserTracks
-);
-router.get(
-  "/playlists",
-  isUserAuthenticatedMiddleware,
-  userController.getUserPlaylists
-);
+export default (app: Router) => {
+  app.use("/user", route);
 
-export default router;
+  route.get("/", async (req, res, next) => {
+    try {
+      const user = req.user;
+      res.json({ user });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  route.get("/tracks", isAuth, async (req: Request, res, next) => {
+    try {
+      const userId = req.user.id;
+      const tracks = await userController.getUserTracks(userId);
+      res.json({ tracks });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  route.get("/playlists", isAuth, async (req: Request, res, next) => {
+    try {
+      const userId = req.user.id;
+      const tracks = await userController.getUserPlaylists(userId);
+      res.json({ tracks });
+    } catch (err) {
+      next(err);
+    }
+  });
+};

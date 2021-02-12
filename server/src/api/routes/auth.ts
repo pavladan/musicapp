@@ -1,8 +1,38 @@
 import { Router } from "express";
-import authController from "../controller/authController";
-const router = Router();
+import passport from "../../passport";
+import { IUser } from "../../interfaces/IUser";
+import { BadRequestError } from "../../utils/BadRequestError";
+import ERR from "../../constants/ERRORS";
+import MESS from "../../constants/MESSAGES";
 
-router.post("/login", authController.login);
-router.get("/logout", authController.logout);
+const route = Router();
 
-export default router;
+export default (app: Router) => {
+  app.use("/auth", route);
+
+  route.post("/login", (req, res, next) => {
+    passport.authenticate("local", (err: Error, user: IUser) => {
+      if (err) {
+        return next(new BadRequestError(err.message));
+      }
+      if (!user) {
+        return next(new BadRequestError(ERR.NO_FIND_USER));
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(new BadRequestError(err.message));
+        }
+        return res.json({ user });
+      });
+    })(req, res, next);
+  });
+
+  route.get("/logout", (req, res, next) => {
+    try {
+      req.logout();
+      res.json({ message: MESS.LOGOUT });
+    } catch (err) {
+      next(new BadRequestError(err.message));
+    }
+  });
+};

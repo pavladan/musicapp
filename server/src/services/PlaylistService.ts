@@ -2,12 +2,12 @@ import Player from "./Player";
 import SocketIO from "socket.io";
 import trackEvents from "../socket/events/track";
 
-class PlaylistController {
+class PlaylistService {
   private playlists: {
     id: string;
     numberOfConnections: number;
     player: Player;
-    socket: SocketIO.Socket;
+    socket: SocketIO.Namespace;
   }[] = [];
 
   constructor() {}
@@ -18,7 +18,7 @@ class PlaylistController {
 
   private subscribeToPlayer(
     player: Player,
-    socket: SocketIO.Socket | undefined
+    socket: SocketIO.Namespace | undefined
   ) {
     player.on("start-play", () => socket && trackEvents.start(socket));
     player.on(
@@ -28,7 +28,7 @@ class PlaylistController {
     player.on("end-play", () => socket && trackEvents.end(socket));
   }
 
-  increaseConnect(id: string, socket: SocketIO.Socket) {
+  increaseConnect(id: string, socket: SocketIO.Namespace) {
     const playlist = this.getPlaylistById(id);
     if (playlist) playlist.numberOfConnections++;
     else {
@@ -68,5 +68,5 @@ class PlaylistController {
   }
 }
 
-const playlistController = new PlaylistController();
-export default playlistController;
+const playlistService = new PlaylistService();
+export default playlistService;

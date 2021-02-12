@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
-import User, { IUser } from "../api/models/Users";
+import User from "../models/User";
 import passport from "passport";
 import { IVerifyOptions, Strategy as LocalStrategy } from "passport-local";
 import { NativeError } from "mongoose";
+import { IUser } from "../interfaces/IUser";
 
 type DoneFunc = (err: any, id?: unknown) => void;
 

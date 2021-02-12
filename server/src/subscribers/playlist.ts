@@ -1,6 +1,6 @@
-import Playlist from "../api/models/Playlist";
-import playlistController from "../services/PlaylistController";
-import addPlayerToPlaylistController from "./addPlayerToPlaylistController";
+import Playlist from "../models/Playlist";
+import playlistController from "../services/PlaylistService";
+import addPlayerToPlaylistService from "../services/addPlayerToPlaylistService";
 
 export default () => {
   Playlist.watch().on("change", async (changeEvent: any) => {
@@ -8,7 +8,7 @@ export default () => {
     const id = changeEvent.documentKey._id.toString();
 
     if (operationType === "insert") {
-      await addPlayerToPlaylistController(id);
+      await addPlayerToPlaylistService(id);
     } else if (operationType === "update") {
       const updatedFields = changeEvent.updateDescription.updatedFields;
       if (updatedFields.play !== undefined) {

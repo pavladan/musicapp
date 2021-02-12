@@ -1,13 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { ObjectID } from "mongodb";
-
-export interface IPlaylist extends Document {
-  play: boolean;
-  title: string;
-  trackList: { trackId: ObjectID; orderId: number }[];
-  created: Date;
-  authorId: ObjectID;
-}
+import { IPlaylist } from "../interfaces/IPlaylist";
 
 const playlistSchema = new Schema({
   play: {
@@ -17,17 +9,18 @@ const playlistSchema = new Schema({
   title: {
     type: String,
     required: true,
+    minLength: 2,
   },
   trackList: {
     type: [
       {
-        trackId: {
-          type: ObjectID,
+        track: {
+          type: String,
+          ref: "Track",
           required: true,
         },
         orderId: {
           type: Number,
-          required: true,
         },
       },
     ],
@@ -37,10 +30,11 @@ const playlistSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  authorId: {
+  author: {
     type: String,
     required: true,
+    ref: "User",
   },
 });
 
-export default mongoose.model<IPlaylist>("Playlist", playlistSchema);
+export default mongoose.model<IPlaylist & Document>("Playlist", playlistSchema);

@@ -3,19 +3,11 @@
 </template>
 <script>
 import Player from '@/components/player'
-import socketClient from 'socket.io-client'
-import ss from 'socket.io-stream'
-const socket = socketClient('localhost:4000/playlist/6023f5339a2c540e117d89e3',{
-  autoConnect: false
-})
-socket.on('playing', console.log)
-
 
 
 const getAudioContext = () => {
   AudioContext = window.AudioContext || window.webkitAudioContext
-  const audioContent = new AudioContext()
-  return audioContent
+  return new AudioContext()
 }
 
 const appendBuffer = (buffer1, buffer2, context) => {
@@ -38,12 +30,6 @@ const appendBuffer = (buffer1, buffer2, context) => {
 
 export default {
   components: { Player },
-  created() {
-    socket.connect()
-  },
-  destroyed() {
-    socket.disconnect()
-  },
   methods: {
     async getTrack() {
       const audioContext = getAudioContext()

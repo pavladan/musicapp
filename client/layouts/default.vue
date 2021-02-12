@@ -28,6 +28,10 @@ body{
   box-sizing: border-box;
   margin: 0;
 }
+
+a{
+  all: unset;
+}
 </style>
 <style scoped>
 .content {

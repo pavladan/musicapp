@@ -1,20 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-
-export interface IThirdPartyProvider extends Document {
-  provider_name: string;
-  provider_id: string;
-  provider_data: object;
-}
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  email_is_verified: boolean;
-  password: string;
-  referral_code: string;
-  referred_by: string;
-  third_party_auth: IThirdPartyProvider;
-  date: Date;
-}
+import { IUser } from "../interfaces/IUser";
 
 const ThirdPartyProviderSchema = new Schema({
   provider_name: {
@@ -47,6 +32,7 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
+      minLength: 6,
     },
     referral_code: {
       type: String,
@@ -72,6 +58,4 @@ const UserSchema = new Schema(
   { strict: false }
 );
 
-const User = mongoose.model<IUser>("users", UserSchema);
-
-export default User;
+export default mongoose.model<IUser & Document>("User", UserSchema);
