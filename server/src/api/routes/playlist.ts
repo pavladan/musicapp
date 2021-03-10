@@ -1,36 +1,15 @@
 import MESS from "../../constants/MESSAGES";
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Router } from "express";
 import playlistController from "../../controller/playlist";
 import isAuthor from "../middlewares/isAuthor";
 import Playlist from "../../models/Playlist";
 import isAuth from "../middlewares/isAuth";
-import { IPlaylist, IPlaylistDTO } from "../../interfaces/IPlaylist";
+import { IPlaylistDTO } from "../../interfaces/IPlaylist";
+import players from "../../stores/players";
 
 const route = Router();
 
 const ID_PARAM = "playlistId";
-
-const playPauseHandler = (isPlay: boolean) => {
-  return async (
-    req: Request<{ [ID_PARAM]: string }>,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      const id = req.params[ID_PARAM];
-      const playlist = await playlistController.play(id, {
-        isPlay,
-      });
-      const message = isPlay ? MESS.PLAYLIST.PLAY : MESS.PLAYLIST.PAUSE;
-      res.json({
-        playlist,
-        message,
-      });
-    } catch (err) {
-      next(err);
-    }
-  };
-};
 
 export default (app: Router) => {
   app.use("/playlist", route);
@@ -55,7 +34,7 @@ export default (app: Router) => {
           title: req.body.title,
           trackList: req.body.trackList || [],
           author: req.user.id,
-          play: req.body.play || false,
+          state: req.body.state,
         });
         res.json({ playlist });
       } catch (err) {
@@ -82,7 +61,11 @@ export default (app: Router) => {
   route.put(
     `/:${ID_PARAM}`,
     isAuthor(Playlist, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }, {}, IPlaylist>, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IPlaylistDTO>,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const playlist = await playlistController.edit(id, { ...req.body });
@@ -99,12 +82,58 @@ export default (app: Router) => {
   route.post(
     `/:${ID_PARAM}/play`,
     isAuthor(Playlist, ID_PARAM),
-    playPauseHandler(true)
+    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+      try {
+        const id = req.params[ID_PARAM];
+        const playlist = await playlistController.play(id);
+        const message = MESS.PLAYLIST.PLAY;
+        res.json({
+          playlist,
+          message,
+        });
+      } catch (err) {
+        next(err);
+      }
+    }
   );
 
   route.post(
-    `/:${ID_PARAM}/play`,
+    `/:${ID_PARAM}/pause`,
     isAuthor(Playlist, ID_PARAM),
-    playPauseHandler(false)
+    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+      try {
+        const id = req.params[ID_PARAM];
+        const player = players.get(id);
+        const playlist = await playlistController.pause(
+          id,
+          player.state.track,
+          player.state.time
+        );
+        const message = MESS.PLAYLIST.PAUSE;
+        res.json({
+          playlist,
+          message,
+        });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+
+  route.post(
+    `/:${ID_PARAM}/stop`,
+    isAuthor(Playlist, ID_PARAM),
+    async (req, res, next) => {
+      try {
+        const id = req.params[ID_PARAM];
+        const playlist = await playlistController.stop(id);
+        res.json({
+          playlist,
+          message: MESS.PLAYLIST.STOP,
+        });
+      } catch (err) {
+        next(err);
+      }
+    }
   );
 };

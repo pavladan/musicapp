@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '../.env' })
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -41,7 +43,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: 'http://localhost:4000/api/v1/',
+    baseURL: `http://localhost:${process.env.API_PORT}${process.env.API_PREFIX}`,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -53,4 +55,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  publicRuntimeConfig: {
+    streamURL: `ws://localhost:${process.env.STREAM_PORT}${process.env.STREAM_PREFIX}`,
+  },
 }

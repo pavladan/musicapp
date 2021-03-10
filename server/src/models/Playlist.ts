@@ -2,9 +2,19 @@ import mongoose, { Schema, Document } from "mongoose";
 import { IPlaylist } from "../interfaces/IPlaylist";
 
 const playlistSchema = new Schema({
-  play: {
-    type: Boolean,
-    default: false,
+  state: {
+    play: {
+      type: Boolean,
+      default: false,
+    },
+    trackId: {
+      type: Number,
+      default: 0,
+    },
+    timestamp: {
+      type: Number,
+      default: 0,
+    },
   },
   title: {
     type: String,

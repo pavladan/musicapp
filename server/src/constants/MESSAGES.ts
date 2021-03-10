@@ -5,5 +5,6 @@ export default Object.freeze({
   PLAYLIST: {
     PLAY: "Complete play",
     PAUSE: "Complete pause",
+    STOP: "Complete stop",
   },
 });

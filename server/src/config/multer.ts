@@ -1,9 +1,10 @@
 import multer from "multer";
 import { Request, Express } from "express";
+import config from ".";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads");
+    cb(null, config.media_path);
   },
   filename: (req, file, cb) => {
     cb(null, `${new Date().getTime()}_${file.originalname}`);

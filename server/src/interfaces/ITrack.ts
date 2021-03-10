@@ -1,4 +1,5 @@
 import { Express } from "express";
+import { IUser } from "./IUser";
 
 export interface ITrack {
   id: string;
@@ -6,7 +7,7 @@ export interface ITrack {
   track: Express.Multer.File;
   artist: string;
   created: Date;
-  author: string;
+  author: IUser | string;
 }
 
 export interface ITrackDTO {

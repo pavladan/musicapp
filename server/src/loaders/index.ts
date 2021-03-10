@@ -6,6 +6,7 @@ import http from "http";
 import socketLoader from "./socket";
 import passportLoader from "./passport";
 import subscribers from "./subscribers";
+import mediaServerLoader from "./mediaServer";
 
 export default async (expressApp: Express, server: http.Server) => {
   await mongooseLoader();
@@ -17,12 +18,15 @@ export default async (expressApp: Express, server: http.Server) => {
   await passportLoader(expressApp);
   console.info("    🚀 Passport loaded");
 
-  await playlistsLoader();
-  console.info("    🚀 Playlists loaded");
-
   await expressLoader(expressApp);
   console.info("    🚀 Express loaded");
 
-  await socketLoader(server);
-  console.info("    🚀 Socket loaded");
+  await mediaServerLoader();
+  console.info("    🚀 Media server loaded");
+
+  await playlistsLoader();
+  console.info("    🚀 Playlists loaded");
+
+  // await socketLoader(server);
+  // console.info("    🚀 Socket loaded");
 };

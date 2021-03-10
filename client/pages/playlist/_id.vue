@@ -1,16 +1,33 @@
-<template></template>
+<template>
+  <div>
+    <button v-on:click="player.play()">play</button>
+    <button v-on:click="player.pause()">pause</button>
+  </div>
+</template>
 
-<script>
-import socketClient from 'socket.io-client'
-let socket
+<script lang="ts">
+import flvjs from 'flv.js'
+import FlvJs from 'flv.js'
+import Player = FlvJs.Player
 
 export default {
-  created() {
-    socket = socketClient(`localhost:4000/playlist/${this.playlistId}`)
-    socket.on('playing', console.log)
+  data: function () {
+    const player: Player = null
+    return {
+      player,
+    }
   },
-  destroyed() {
-    socket.disconnect()
+  mounted() {
+    if (flvjs.isSupported()) {
+      this.player = flvjs.createPlayer({
+        type: 'flv',
+        isLive: true,
+        hasVideo: false,
+        url: `${this.$config.streamURL}/${this.playlistId}.flv`,
+      })
+      this.player.attachMediaElement(new Audio())
+      this.player.load()
+    }
   },
   async asyncData({ params }) {
     const id = params.id

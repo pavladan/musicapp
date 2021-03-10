@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import trackController from "../../controller/track";
-import upload from "../../services/multer";
+import upload from "../../config/multer";
 import isAuthor from "../middlewares/isAuthor";
 import Track from "../../models/Track";
 import isAuth from "../middlewares/isAuth";

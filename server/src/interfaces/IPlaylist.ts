@@ -1,15 +1,18 @@
-export interface IPlaylist {
-  id: string;
-  play: boolean;
-  title: string;
-  trackList: { track: string; orderId: number }[];
-  created: Date;
-  author: string;
-}
+import { IUser } from "./IUser";
+import { ITrack } from "./ITrack";
 
 export interface IPlaylistDTO {
-  play: boolean;
+  state: {
+    play: boolean;
+    trackId: number;
+    timestamp: number;
+  };
   title: string;
-  trackList: { track: string; orderId: number }[];
-  author: string;
+  trackList: { track: string | ITrack; orderId: number }[];
+  author: string | IUser;
+}
+
+export interface IPlaylist extends IPlaylistDTO {
+  id: string;
+  created: Date;
 }
