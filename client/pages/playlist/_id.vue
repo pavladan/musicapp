@@ -5,21 +5,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import flvjs from 'flv.js'
+<script>
 import FlvJs from 'flv.js'
-import Player = FlvJs.Player
 
 export default {
   data: function () {
-    const player: Player = null
     return {
-      player,
+      player: null,
     }
   },
   mounted() {
-    if (flvjs.isSupported()) {
-      this.player = flvjs.createPlayer({
+    if (FlvJs.isSupported()) {
+      this.player = FlvJs.createPlayer({
         type: 'flv',
         isLive: true,
         hasVideo: false,

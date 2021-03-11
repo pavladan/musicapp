@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <h2 class="title">Track list</h2>
     <vs-table>
       <template #header>
@@ -7,30 +7,30 @@
       </template>
       <template #thead>
         <vs-tr>
-          <vs-th sort @click="allMusic = $vs.sortData($event, allMusic, 'id')">
+          <vs-th sort @click="allTracks = $vs.sortData($event, allTracks, 'id')">
             #
           </vs-th>
           <vs-th
             sort
-            @click="allMusic = $vs.sortData($event, allMusic, 'title')"
+            @click="allTracks = $vs.sortData($event, allTracks, 'title')"
           >
             Title
           </vs-th>
           <vs-th
             sort
-            @click="allMusic = $vs.sortData($event, allMusic, 'artist')"
+            @click="allTracks = $vs.sortData($event, allTracks, 'artist')"
           >
             Artist
           </vs-th>
           <vs-th
             sort
-            @click="allMusic = $vs.sortData($event, allMusic, 'date')"
+            @click="allTracks = $vs.sortData($event, allTracks, 'date')"
           >
             Date created
           </vs-th>
           <vs-th
             sort
-            @click="allMusic = $vs.sortData($event, allMusic, 'action')"
+            @click="allTracks = $vs.sortData($event, allTracks, 'action')"
           >
             Action
           </vs-th>
@@ -42,7 +42,7 @@
         <vs-tr
           v-if="!musicLoading"
           :key="i"
-          v-for="(tr, i) in $vs.getSearch(allMusic, search)"
+          v-for="(tr, i) in $vs.getSearch(allTracks, search)"
           :data="tr"
         >
           <vs-td>
@@ -66,37 +66,34 @@
       </template>
     </vs-table>
     <div class="add-button">
-      <vs-button
-        block
-        @click="isOpenAddMusicModal = !isOpenAddMusicModal"
-      >
-        <i class='bx bxs-plus-circle' ></i> Add Track
+      <vs-button block @click="$store.commit('modals/open', 'add-track')">
+        <i class="bx bxs-plus-circle"></i> Add Track
       </vs-button>
     </div>
-    <add-music-dialog v-model="isOpenAddMusicModal"/>
+    <add-track-modal />
   </div>
 </template>
 
 <script>
-import AddMusicDialog from "@/components/addMusicDialog";
+import AddTrackModal from '@/modals/add-track'
+import api from '@/utils/api'
 let tableLoader
 
 export default {
   name: 'library',
-  components: {AddMusicDialog},
+  components: { AddTrackModal },
   data: () => {
     return {
       search: '',
       musicLoading: false,
-      allMusic: [],
-      isOpenAddMusicModal: false,
+      allTracks: [],
     }
   },
   methods: {
-    async getAllMusics() {
+    async getAllTracks() {
       this.musicLoading = true
       try {
-        this.allMusic = await this.$axios.$get('/user/tracks')
+        this.allTracks = (await api.user.tracks()).tracks
         this.musicLoading = false
       } catch (err) {
         this.musicLoading = false
@@ -110,8 +107,8 @@ export default {
     },
     async deleteMusic(id) {
       try {
-        await this.$axios.$delete(`/track/${id}`)
-        await this.getAllMusics()
+        await api.track.delete(id)
+        await this.getAllTracks()
       } catch (err) {
         this.$vs.notification({
           title: 'Error',
@@ -123,7 +120,7 @@ export default {
     },
   },
   created() {
-    this.getAllMusics()
+    this.getAllTracks()
   },
   watch: {
     musicLoading: function (value) {
@@ -138,11 +135,12 @@ export default {
       }
     },
   },
+  middleware: ['authenticated']
 }
 </script>
 
 <style scoped>
-.title{
+.title {
   margin: 10px;
 }
 .table_body_loader {
@@ -150,7 +148,7 @@ export default {
   width: 100%;
   height: 100px;
 }
-.add-button{
+.add-button {
   max-width: 400px;
   margin: 10px auto 0;
 }

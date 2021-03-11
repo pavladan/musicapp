@@ -7,10 +7,15 @@ const route = Router();
 export default (app: Router) => {
   app.use("/user", route);
 
-  route.get("/", async (req, res, next) => {
+  route.get("/", async (req: Request, res, next) => {
     try {
       const user = req.user;
-      res.json({ user });
+      if (user) {
+        const newUser = await userController.getUser(user.id);
+        res.json({ user: newUser });
+      } else {
+        res.json({ user: null });
+      }
     } catch (err) {
       next(err);
     }
@@ -29,8 +34,8 @@ export default (app: Router) => {
   route.get("/playlists", isAuth, async (req: Request, res, next) => {
     try {
       const userId = req.user.id;
-      const tracks = await userController.getUserPlaylists(userId);
-      res.json({ tracks });
+      const playlists = await userController.getUserPlaylists(userId);
+      res.json({ tracks: playlists });
     } catch (err) {
       next(err);
     }

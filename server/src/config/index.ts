@@ -9,7 +9,7 @@ dotenv.config({
   path: "../.env",
 });
 
-const allowOrigin = "*";
+const allowOrigin = true;
 
 export default {
   port: +process.env.API_PORT || +process.env.PORT || 4000,

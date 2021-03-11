@@ -6,7 +6,7 @@ import ERR from "../../constants/ERRORS";
 export default function isAuthor(Model: Model<any>, paramName = "id") {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.user) throw new BadRequestError(ERR.FORBIDDEN, 403);
+      if (!req.user) throw new BadRequestError(ERR.UNAUTHORIZED, 401);
       const id = req.params[paramName];
       const found = await Model.findById(id);
       if (!found) throw new BadRequestError(ERR.NOT_FOUND, 202);

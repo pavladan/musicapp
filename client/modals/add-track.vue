@@ -1,11 +1,12 @@
 <template>
-  <vs-dialog v-model="isOpen">
-  </vs-dialog>
+  <vs-dialog v-model="isOpen"> </vs-dialog>
 </template>
 
 <script>
+import { modals } from '@/store'
+
 export default {
-  name: 'add-music-dialog',
+  name: 'add-track-modal',
   model: {
     prop: 'value',
     event: 'event',
@@ -17,11 +18,11 @@ export default {
   computed: {
     isOpen: {
       get() {
-        return this.value;
+        return modals.modalName === 'add-track'
       },
       set(val) {
-        this.$emit('event', val)
-      }
+        val || modals.close()
+      },
     },
   },
 }

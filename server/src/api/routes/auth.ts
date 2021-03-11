@@ -22,7 +22,9 @@ export default (app: Router) => {
         if (err) {
           return next(new BadRequestError(err.message));
         }
-        return res.json({ user });
+        const userWithoutPass = JSON.parse(JSON.stringify(user));
+        delete userWithoutPass.password;
+        return res.json({ user: userWithoutPass });
       });
     })(req, res, next);
   });

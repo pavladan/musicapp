@@ -1,7 +1,7 @@
 import playlistController from "../controller/playlist";
 import config from "../config";
 const NodeMediaServer = require("node-media-server");
-console.log(config);
+
 export default () => {
   const nms = new NodeMediaServer(config.rtmp_server);
   nms.on("prePublish", async (id: number, StreamPath: string, args: any) => {

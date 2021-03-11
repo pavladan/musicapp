@@ -8,7 +8,7 @@ export default function isAuth(
   next: NextFunction
 ) {
   if (!req.user) {
-    return next(new BadRequestError(ERRORS.FORBIDDEN, 403));
+    return next(new BadRequestError(ERRORS.UNAUTHORIZED, 401));
   }
   next();
 }

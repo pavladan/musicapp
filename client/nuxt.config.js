@@ -1,5 +1,7 @@
 require('dotenv').config({ path: '../.env' })
 
+const app_name = 'MusicApp'
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -9,7 +11,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'MusicApp',
+    title: app_name,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -19,10 +21,15 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['vuesax/dist/vuesax.css', 'boxicons/css/boxicons.min.css'],
+  css: [
+    'vuesax/dist/vuesax.css',
+    'boxicons/css/boxicons.min.css',
+    '~assets/styles/fonts.scss',
+    '~assets/styles/global.scss',
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/vuesax'],
+  plugins: ['@/plugins/vuesax', '@/plugins/axios-accessor'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -44,6 +51,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: `http://localhost:${process.env.API_PORT}${process.env.API_PREFIX}`,
+    credentials: true,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -57,6 +65,7 @@ export default {
   build: {},
 
   publicRuntimeConfig: {
+    app_name,
     streamURL: `ws://localhost:${process.env.STREAM_PORT}${process.env.STREAM_PREFIX}`,
   },
 }
