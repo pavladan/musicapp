@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import trackController from "../../controller/track";
 import upload from "../../config/multer";
-import isAuthor from "../middlewares/isAuthor";
+import isOwner from "../middlewares/isOwner";
 import Track from "../../models/Track";
 import isAuth from "../middlewares/isAuth";
 import { ITrackDTO } from "../../interfaces/ITrack";
@@ -26,7 +26,7 @@ export default (app: Router) => {
           title: req.body.title,
           artist: req.body.artist,
           track: req.file,
-          author: req.user.id,
+          owner: req.user.id,
         });
         res.json({ track });
       } catch (err) {
@@ -37,7 +37,7 @@ export default (app: Router) => {
 
   route.get(
     `/:${ID_PARAM}`,
-    isAuthor(Track, ID_PARAM),
+    isOwner(Track, ID_PARAM),
     async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
       try {
         const id = req.params[ID_PARAM];
@@ -71,7 +71,7 @@ export default (app: Router) => {
 
   route.delete(
     `/:${ID_PARAM}`,
-    isAuthor(Track, ID_PARAM),
+    isOwner(Track, ID_PARAM),
     async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
       try {
         const id = req.params[ID_PARAM];

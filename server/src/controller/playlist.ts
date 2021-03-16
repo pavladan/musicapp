@@ -11,14 +11,14 @@ export default {
     return Playlist.findByIdAndDelete(id);
   },
   get: async (id: string) => {
-    return Playlist.findById(id).populate(["author", "trackList.track"]).exec();
+    return Playlist.findById(id).populate(["owner", "trackList.track"]).exec();
   },
   getAll: async () => {
-    return Playlist.find().populate(["author", "trackList.track"]).exec();
+    return Playlist.find().populate(["owner", "trackList.track"]).exec();
   },
   getTracks: async (id: string) => {
     const playlist = await Playlist.findById(id)
-      .populate(["author", "trackList.track"])
+      .populate(["owner", "trackList.track"])
       .exec();
     return playlist.trackList
       .map((item) => (<ITrack>item.track)?.track.path)
@@ -26,7 +26,7 @@ export default {
   },
   getPlaying: async () => {
     return Playlist.find({ "state.play": true })
-      .populate(["author", "trackList.track"])
+      .populate(["owner", "trackList.track"])
       .exec();
   },
   edit: async (id: string, editData: IPlaylistDTO) => {

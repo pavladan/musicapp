@@ -18,7 +18,7 @@ const trackSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  author: {
+  owner: {
     type: String,
     required: true,
     ref: "User",

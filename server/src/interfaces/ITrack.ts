@@ -7,7 +7,7 @@ export interface ITrack {
   track: Express.Multer.File;
   artist: string;
   created: Date;
-  author: IUser | string;
+  owner: IUser | string;
 }
 
 export interface ITrackDTO {

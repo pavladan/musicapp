@@ -9,7 +9,7 @@ export interface IPlaylistDTO {
   };
   title: string;
   trackList: { track: string | ITrack; orderId: number }[];
-  author: string | IUser;
+  owner: string | IUser;
 }
 
 export interface IPlaylist extends IPlaylistDTO {

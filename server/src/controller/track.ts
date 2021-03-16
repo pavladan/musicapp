@@ -5,13 +5,13 @@ import { BadRequestError } from "../utils/BadRequestError";
 import ERRORS from "../constants/ERRORS";
 
 export default {
-  addNewTrack: async (data: ITrackDTO & { author: string }) => {
+  addNewTrack: async (data: ITrackDTO & { owner: string }) => {
     const track = new Track(data);
     return track.save();
   },
 
   getTrackInfo: async (id: string) => {
-    return Track.findById(id).populate("author").exec();
+    return Track.findById(id).populate("owner").exec();
   },
 
   getTrack: async (id: string) => {

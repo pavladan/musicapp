@@ -1,7 +1,7 @@
 import MESS from "../../constants/MESSAGES";
 import { Request, Router } from "express";
 import playlistController from "../../controller/playlist";
-import isAuthor from "../middlewares/isAuthor";
+import isOwner from "../middlewares/isOwner";
 import Playlist from "../../models/Playlist";
 import isAuth from "../middlewares/isAuth";
 import { IPlaylistDTO } from "../../interfaces/IPlaylist";
@@ -33,7 +33,7 @@ export default (app: Router) => {
         const playlist = await playlistController.add({
           title: req.body.title,
           trackList: req.body.trackList || [],
-          author: req.user.id,
+          owner: req.user.id,
           state: req.body.state,
         });
         res.json({ playlist });
@@ -44,7 +44,7 @@ export default (app: Router) => {
   );
   route.delete(
     `/:${ID_PARAM}`,
-    isAuthor(Playlist, ID_PARAM),
+    isOwner(Playlist, ID_PARAM),
     async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
       try {
         const id = req.params[ID_PARAM];
@@ -60,7 +60,7 @@ export default (app: Router) => {
   );
   route.put(
     `/:${ID_PARAM}`,
-    isAuthor(Playlist, ID_PARAM),
+    isOwner(Playlist, ID_PARAM),
     async (
       req: Request<{ [ID_PARAM]: string }, {}, IPlaylistDTO>,
       res,
@@ -81,7 +81,7 @@ export default (app: Router) => {
 
   route.post(
     `/:${ID_PARAM}/play`,
-    isAuthor(Playlist, ID_PARAM),
+    isOwner(Playlist, ID_PARAM),
     async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
       try {
         const id = req.params[ID_PARAM];
@@ -99,7 +99,7 @@ export default (app: Router) => {
 
   route.post(
     `/:${ID_PARAM}/pause`,
-    isAuthor(Playlist, ID_PARAM),
+    isOwner(Playlist, ID_PARAM),
     async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
       try {
         const id = req.params[ID_PARAM];
@@ -122,7 +122,7 @@ export default (app: Router) => {
 
   route.post(
     `/:${ID_PARAM}/stop`,
-    isAuthor(Playlist, ID_PARAM),
+    isOwner(Playlist, ID_PARAM),
     async (req, res, next) => {
       try {
         const id = req.params[ID_PARAM];
