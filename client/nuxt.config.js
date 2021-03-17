@@ -26,6 +26,7 @@ export default {
     'boxicons/css/boxicons.min.css',
     '~assets/styles/fonts.scss',
     '~assets/styles/global.scss',
+    '~assets/styles/theme.scss',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

@@ -23,6 +23,11 @@ const trackSchema = new Schema({
     required: true,
     ref: "User",
   },
+  duration: {
+    type: String,
+    required: true,
+    default: "0",
+  },
 });
 
 export default mongoose.model<ITrack & Document>("Track", trackSchema);

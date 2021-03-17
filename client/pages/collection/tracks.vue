@@ -1,13 +1,23 @@
 <template>
   <div>
-    <h2 class="title">Track list</h2>
+    <div class="item">
+      <h2 class="title">Tracks</h2>
+      <vs-button
+        icon
+        gradient
+        circle
+        @click="$store.commit('modals/open', 'add-track')"
+      >
+        <i class="bx bx-plus"></i>
+      </vs-button>
+    </div>
     <vs-table>
-      <template #header>
-        <vs-input v-model="search" border placeholder="Search" />
-      </template>
       <template #thead>
         <vs-tr>
-          <vs-th sort @click="allTracks = $vs.sortData($event, allTracks, 'id')">
+          <vs-th
+            sort
+            @click="allTracks = $vs.sortData($event, allTracks, 'id')"
+          >
             #
           </vs-th>
           <vs-th
@@ -22,18 +32,8 @@
           >
             Artist
           </vs-th>
-          <vs-th
-            sort
-            @click="allTracks = $vs.sortData($event, allTracks, 'date')"
-          >
-            Date created
-          </vs-th>
-          <vs-th
-            sort
-            @click="allTracks = $vs.sortData($event, allTracks, 'action')"
-          >
-            Action
-          </vs-th>
+          <vs-th> </vs-th>
+          <vs-th> </vs-th>
         </vs-tr>
       </template>
 
@@ -55,21 +55,23 @@
             {{ tr.artist }}
           </vs-td>
           <vs-td>
-            {{ new Date(tr.created) }}
-          </vs-td>
-          <vs-td>
-            <vs-button icon color="danger" border @click="deleteMusic(tr._id)">
+            <vs-button
+              icon
+              danger
+              transparent
+              circle
+              @click="deleteTrack(tr._id)"
+              size="small"
+            >
               <i class="bx bxs-trash"></i>
             </vs-button>
+          </vs-td>
+          <vs-td>
+            {{ tr.durationHms }}
           </vs-td>
         </vs-tr>
       </template>
     </vs-table>
-    <div class="add-button">
-      <vs-button block @click="$store.commit('modals/open', 'add-track')">
-        <i class="bx bxs-plus-circle"></i> Add Track
-      </vs-button>
-    </div>
     <add-track-modal />
   </div>
 </template>
@@ -77,10 +79,10 @@
 <script>
 import AddTrackModal from '@/modals/add-track'
 import api from '@/utils/api'
+import secondsToHms from '@/utils/secondsToHms'
 let tableLoader
 
 export default {
-  name: 'library',
   components: { AddTrackModal },
   data: () => {
     return {
@@ -94,6 +96,9 @@ export default {
       this.musicLoading = true
       try {
         this.allTracks = (await api.user.tracks()).tracks
+        this.allTracks.forEach((track) => {
+          track.durationHms = secondsToHms(track.duration)
+        })
         this.musicLoading = false
       } catch (err) {
         this.musicLoading = false
@@ -105,11 +110,14 @@ export default {
         })
       }
     },
-    async deleteMusic(id) {
+    async deleteTrack(id) {
+      this.musicLoading = true
       try {
         await api.track.delete(id)
+        this.musicLoading = false
         await this.getAllTracks()
       } catch (err) {
+        this.musicLoading = false
         this.$vs.notification({
           title: 'Error',
           text: 'Error Delete Track',
@@ -135,11 +143,15 @@ export default {
       }
     },
   },
-  middleware: ['authenticated']
+  middleware: ['authenticated'],
 }
 </script>
 
 <style scoped>
+.item {
+  display: flex;
+  align-items: center;
+}
 .title {
   margin: 10px;
 }
@@ -147,9 +159,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100px;
-}
-.add-button {
-  max-width: 400px;
-  margin: 10px auto 0;
+  z-index: -1;
 }
 </style>

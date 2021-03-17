@@ -1,19 +1,118 @@
 <template>
-  <vs-dialog v-model="isOpen"> </vs-dialog>
+  <vs-dialog v-model="isOpen" blur class="add-track-modal">
+    <template #header>
+      <h4 class="not-margin">Add tracks</h4>
+    </template>
+
+    <div class="item" v-for="file in files" :key="file.id">
+      #{{ file.id + 1 }}
+      <vs-input
+        label-placeholder="Title"
+        v-model="file.title"
+        :state="!file.title ? 'danger' : undefined"
+      />
+      <vs-input
+        label-placeholder="Artist"
+        v-model="file.artist"
+        :state="!file.artist ? 'danger' : undefined"
+      />
+      <div class="flex">
+        <div class="audio-player">
+          <audio :src="file.fileObjectUrl" controls />
+        </div>
+        <vs-button
+          icon
+          danger
+          transparent
+          circle
+          style="margin: 0"
+          title="Remove"
+          @click.stop="deleteFile(file.id)"
+        >
+          <i class="bx bx-x" />
+        </vs-button>
+      </div>
+    </div>
+    <div :class="`file ${isFilesExist ? 'exist' : ''}`">
+      <span class="file-label" v-html='fileContainerLabel' />
+      <input
+        ref="fileInput"
+        type="file"
+        accept="audio/*"
+        @change="addFiles($event.target.files)"
+        class="file-input"
+        multiple
+      />
+    </div>
+    <template #footer>
+      <div class="footer">
+        <vs-button
+          block
+          @click="uploadFile()"
+          :loading="isLoading"
+          :disabled="
+            !isFilesExist ||
+            files.some((file) => !file.title || !file.artist || !file.file)
+          "
+        >
+          Upload
+        </vs-button>
+      </div>
+    </template>
+  </vs-dialog>
 </template>
 
 <script>
 import { modals } from '@/store'
+import api from '@/utils/api'
 
 export default {
-  name: 'add-track-modal',
-  model: {
-    prop: 'value',
-    event: 'event',
-  },
-
-  props: {
-    value: Boolean,
+  data: () => ({
+    files: [],
+    isLoading: false,
+  }),
+  methods: {
+    async uploadFile() {
+      this.isLoading = true
+      try {
+        await Promise.all(
+          this.files.map((file) => {
+            const formData = new FormData()
+            formData.append('title', file.title)
+            formData.append('artist', file.artist)
+            formData.append('track', file.file)
+            return api.track.add(formData)
+          })
+        )
+        this.isLoading = false
+        modals.close()
+        this.files = []
+      } catch (err) {
+        this.isLoading = false
+        this.$vs.notification({
+          title: 'Error',
+          text: 'Track adding error',
+          progress: 'auto',
+          color: 'danger',
+        })
+      }
+    },
+    addFiles(files) {
+      files.forEach((file) => {
+        const matchName = file.name.match(/(.*)\..+$/)
+        this.files.push({
+          id: this.files.length,
+          file,
+          fileObjectUrl: URL.createObjectURL(file),
+          title: matchName ? matchName[1] : '',
+          artist: '',
+        })
+      })
+      this.$refs.fileInput.value = ''
+    },
+    deleteFile(id) {
+      this.files = this.files.filter((file) => file.id !== id)
+    },
   },
   computed: {
     isOpen: {
@@ -24,8 +123,75 @@ export default {
         val || modals.close()
       },
     },
+    isFilesExist() {
+      return this.files.length !== 0
+    },
+    fileContainerLabel() {
+      return !this.isFilesExist
+        ? `Drag your file(s) here to begin
+          <br />
+          or click to browse`
+        : `Add more files`
+    },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.item {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.flex {
+  display: flex;
+  gap: 5px;
+}
+.file {
+  position: relative;
+  outline: 2px dashed grey;
+  outline-offset: -10px;
+  background: rgba(var(--vs-gray-2), 1);
+  color: dimgray;
+  padding: 20px;
+  min-height: 150px;
+  cursor: pointer;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition);
+  &.exist{
+    min-height: 50px;
+  }
+  &:hover {
+    outline-offset: -6px;
+  }
+  &-input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    cursor: pointer;
+  }
+  &-label {
+    text-align: center;
+  }
+}
+.audio-player {
+  audio {
+    height: 100%;
+    outline: none;
+  }
+}
+</style>
+<style lang="scss">
+.add-track-modal {
+  .vs-input {
+    width: 100%;
+  }
+}
+</style>

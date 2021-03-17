@@ -1,5 +1,5 @@
 <template>
-  <vs-dialog v-model="isOpen">
+  <vs-dialog v-model="isOpen" blur>
     <template #header>
       <h4 class="not-margin">
         Welcome to <b>{{ $config.app_name }}</b>
@@ -15,7 +15,7 @@
           <i class="bx bxs-lock"></i>
         </template>
       </vs-input>
-      <div class="flex">
+      <div class='item'>
         <vs-checkbox v-model="remember">Remember me</vs-checkbox>
         <a href="#">Forgot Password?</a>
       </div>
@@ -79,7 +79,7 @@ export default {
 }
 .con-form {
   width: 100%;
-  .flex {
+  .item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -124,14 +124,14 @@ export default {
     font-size: 0.8rem;
   }
   .vs-input-content {
-    margin: 10px 0px;
+    margin: 10px 0;
     width: calc(100%);
     .vs-input {
       width: 100%;
     }
   }
   .vs-button {
-    margin: 0px;
+    margin: 0;
   }
 }
 </style>

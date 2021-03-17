@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     cb(null, config.media_path);
   },
   filename: (req, file, cb) => {
-    cb(null, `${new Date().getTime()}_${file.originalname}`);
+    cb(null, `${new Date().getTime()}_${file.originalname.replace(" ", "_")}`);
   },
 });
 const fileFilter = (

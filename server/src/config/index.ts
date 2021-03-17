@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 const pathToFfmpeg = require("ffmpeg-static");
+const ffprobeStatic = require("ffprobe-static");
 
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
@@ -15,6 +16,7 @@ export default {
   port: +process.env.API_PORT || +process.env.PORT || 4000,
   databaseURL: process.env.MONGO_URI,
   media_path: path.resolve("./uploads"),
+  ffprobe: ffprobeStatic.path,
   api: {
     prefix: process.env.API_PREFIX || "/",
   },

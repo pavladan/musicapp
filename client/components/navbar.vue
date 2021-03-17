@@ -8,9 +8,14 @@
     <vs-navbar-item :active="this.$route.path === '/'" to="/">
       Home
     </vs-navbar-item>
-    <vs-navbar-item :active="this.$route.path === '/library'" to="/library">
-      Library
-    </vs-navbar-item>
+    <template v-if="$store.getters['auth/isAuthenticated']">
+      <vs-navbar-item
+        :active="this.$route.path.includes('/collection')"
+        to="/collection"
+      >
+        My music
+      </vs-navbar-item>
+    </template>
     <template #right>
       <template v-if="$store.getters['auth/isAuthenticated']">
         <vs-button transparent @click="logout()" :key="'logout'"

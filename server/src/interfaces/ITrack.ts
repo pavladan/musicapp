@@ -8,6 +8,7 @@ export interface ITrack {
   artist: string;
   created: Date;
   owner: IUser | string;
+  duration: string;
 }
 
 export interface ITrackDTO {
