@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../../../interfaces/IUser";
 
 const ThirdPartyProviderSchema = new Schema({
   provider_name: {

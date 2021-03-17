@@ -1,7 +1,7 @@
 import playlistController from "../controller/playlist";
 import players from "../stores/players";
 import Player from "../services/Player";
-import { ITrack } from "../interfaces/ITrack";
+import { ITrack } from "../../../interfaces/ITrack";
 
 export default async () => {
   const playlists = await playlistController.getAll();

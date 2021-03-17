@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { ITrack } from "../interfaces/ITrack";
+import { ITrack } from "../../../interfaces/ITrack";
 
 const trackSchema = new Schema({
   title: {

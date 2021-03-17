@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { IPlaylist } from "../interfaces/IPlaylist";
+import { IPlaylist } from "../../../interfaces/IPlaylist";
 
 const playlistSchema = new Schema({
   state: {

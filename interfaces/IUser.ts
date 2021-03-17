@@ -1,5 +1,3 @@
-import { Document, ObjectId } from "mongoose";
-
 export interface IThirdPartyProvider {
   provider_name: string;
   provider_id: string;
@@ -7,7 +5,6 @@ export interface IThirdPartyProvider {
 }
 
 export interface IUser {
-  _id: ObjectId;
   id: string;
   name: string;
   email: string;
@@ -15,6 +12,11 @@ export interface IUser {
   password: string;
   referral_code: string;
   referred_by: string;
-  third_party_auth: IThirdPartyProvider & Document;
+  third_party_auth: IThirdPartyProvider;
   date: Date;
+}
+
+export interface IUserDTO {
+  email: string;
+  password: string;
 }

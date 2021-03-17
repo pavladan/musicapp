@@ -1,6 +1,6 @@
 import Playlist from "../models/Playlist";
-import { IPlaylistDTO } from "../interfaces/IPlaylist";
-import { ITrack } from "../interfaces/ITrack";
+import { IPlaylistDTO } from "../../../interfaces/IPlaylist";
+import { ITrack } from "../../../interfaces/ITrack";
 
 export default {
   add: async (data: IPlaylistDTO) => {
@@ -29,7 +29,7 @@ export default {
       .populate(["owner", "trackList.track"])
       .exec();
   },
-  edit: async (id: string, editData: IPlaylistDTO) => {
+  edit: async (id: string, editData: Partial<IPlaylistDTO>) => {
     return Playlist.findByIdAndUpdate(id, editData, { new: true });
   },
   play: (id: string) => {

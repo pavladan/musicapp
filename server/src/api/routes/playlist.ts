@@ -4,8 +4,8 @@ import playlistController from "../../controller/playlist";
 import isOwner from "../middlewares/isOwner";
 import Playlist from "../../models/Playlist";
 import isAuth from "../middlewares/isAuth";
-import { IPlaylistDTO } from "../../interfaces/IPlaylist";
 import players from "../../stores/players";
+import { IApi } from "../../../../interfaces/IApi";
 
 const route = Router();
 
@@ -15,10 +15,14 @@ export default (app: Router) => {
   app.use("/playlist", route);
   route.get(
     `/:${ID_PARAM}`,
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["playlist"]["get"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const playlist = await playlistController.get(req.params[ID_PARAM]);
-        res.json({ playlist });
+        res.json(<IApi["playlist"]["get"]["res"]>{ playlist });
       } catch (err) {
         next(err);
       }
@@ -28,7 +32,11 @@ export default (app: Router) => {
   route.post(
     "/add",
     isAuth,
-    async (req: Request<{}, {}, IPlaylistDTO>, res, next) => {
+    async (
+      req: Request<{}, {}, IApi["playlist"]["add"]["post"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const playlist = await playlistController.add({
           title: req.body.title,
@@ -36,7 +44,7 @@ export default (app: Router) => {
           owner: req.user.id,
           state: req.body.state,
         });
-        res.json({ playlist });
+        res.json(<IApi["playlist"]["add"]["post"]["res"]>{ playlist });
       } catch (err) {
         next(err);
       }
@@ -45,11 +53,19 @@ export default (app: Router) => {
   route.delete(
     `/:${ID_PARAM}`,
     isOwner(Playlist, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<
+        { [ID_PARAM]: string },
+        {},
+        IApi["playlist"]["delete"]["req"]
+      >,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const playlist = await playlistController.delete(id);
-        res.json({
+        res.json(<IApi["playlist"]["delete"]["res"]>{
           message: MESS.DELETE,
           playlist,
         });
@@ -62,14 +78,14 @@ export default (app: Router) => {
     `/:${ID_PARAM}`,
     isOwner(Playlist, ID_PARAM),
     async (
-      req: Request<{ [ID_PARAM]: string }, {}, IPlaylistDTO>,
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["playlist"]["put"]["req"]>,
       res,
       next
     ) => {
       try {
         const id = req.params[ID_PARAM];
         const playlist = await playlistController.edit(id, { ...req.body });
-        res.json({
+        res.json(<IApi["playlist"]["put"]["res"]>{
           message: MESS.EDIT,
           playlist,
         });
@@ -82,12 +98,16 @@ export default (app: Router) => {
   route.post(
     `/:${ID_PARAM}/play`,
     isOwner(Playlist, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["playlist"]["play"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const playlist = await playlistController.play(id);
         const message = MESS.PLAYLIST.PLAY;
-        res.json({
+        res.json(<IApi["playlist"]["play"]["res"]>{
           playlist,
           message,
         });
@@ -100,7 +120,15 @@ export default (app: Router) => {
   route.post(
     `/:${ID_PARAM}/pause`,
     isOwner(Playlist, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<
+        { [ID_PARAM]: string },
+        {},
+        IApi["playlist"]["pause"]["req"]
+      >,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const player = players.get(id);
@@ -110,7 +138,7 @@ export default (app: Router) => {
           player.state.time
         );
         const message = MESS.PLAYLIST.PAUSE;
-        res.json({
+        res.json(<IApi["playlist"]["pause"]["res"]>{
           playlist,
           message,
         });
@@ -123,11 +151,15 @@ export default (app: Router) => {
   route.post(
     `/:${ID_PARAM}/stop`,
     isOwner(Playlist, ID_PARAM),
-    async (req, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["playlist"]["stop"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const playlist = await playlistController.stop(id);
-        res.json({
+        res.json(<IApi["playlist"]["stop"]["res"]>{
           playlist,
           message: MESS.PLAYLIST.STOP,
         });

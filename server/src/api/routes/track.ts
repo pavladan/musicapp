@@ -4,7 +4,8 @@ import upload from "../../config/multer";
 import isOwner from "../middlewares/isOwner";
 import Track from "../../models/Track";
 import isAuth from "../middlewares/isAuth";
-import { ITrackDTO } from "../../interfaces/ITrack";
+import MESS from "../../constants/MESSAGES";
+import { IApi } from "../../../../interfaces/IApi";
 
 const route = Router();
 
@@ -17,7 +18,7 @@ export default (app: Router) => {
     "/",
     [isAuth, upload.single("track")],
     async (
-      req: Request<{}, {}, ITrackDTO>,
+      req: Request<{}, {}, IApi["track"]["post"]["req"]>,
       res: Response,
       next: NextFunction
     ) => {
@@ -28,7 +29,7 @@ export default (app: Router) => {
           track: req.file,
           owner: req.user.id,
         });
-        res.json({ track });
+        res.json(<IApi["track"]["post"]["res"]>{ track });
       } catch (err) {
         next(err);
       }
@@ -38,11 +39,15 @@ export default (app: Router) => {
   route.get(
     `/:${ID_PARAM}`,
     isOwner(Track, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["track"]["get"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
         const track = await trackController.getTrackInfo(id);
-        res.json({ track });
+        res.json(<IApi["track"]["get"]["res"]>{ track });
       } catch (err) {
         next(err);
       }
@@ -72,11 +77,15 @@ export default (app: Router) => {
   route.delete(
     `/:${ID_PARAM}`,
     isOwner(Track, ID_PARAM),
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
+    async (
+      req: Request<{ [ID_PARAM]: string }, {}, IApi["track"]["delete"]["req"]>,
+      res,
+      next
+    ) => {
       try {
         const id = req.params[ID_PARAM];
-        const track = trackController.deleteTrack(id);
-        res.json({ track });
+        await trackController.deleteTrack(id);
+        res.json(<IApi["track"]["delete"]["res"]>{ message: MESS.DELETE });
       } catch (err) {
         next(err);
       }

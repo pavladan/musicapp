@@ -1,4 +1,4 @@
-import { IUser } from "../../interfaces/IUser";
+import { IUser } from "../../../../interfaces/IUser";
 
 declare module "express" {
   export interface Request {

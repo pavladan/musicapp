@@ -1,6 +1,6 @@
 import Track from "../models/Track";
 import fsPromises from "fs/promises";
-import { ITrackDTO } from "../interfaces/ITrack";
+import { ITrackDTO } from "../../../interfaces/ITrack";
 import { BadRequestError } from "../utils/BadRequestError";
 import config from "../config";
 import ERRORS from "../constants/ERRORS";
