@@ -22,8 +22,13 @@ export default {
       await $axios.$get<IApi['user']['tracks']['get']['res']>('user/tracks'),
   },
   track: {
-    add: async (data: IApi['track']['post']['req']) =>
-      await $axios.$post<IApi['track']['post']['res']>(`track`, data),
+    add: async (data: IApi['track']['post']['req']) => {
+      const formData = new FormData()
+      formData.append('title', data.title)
+      formData.append('artist', data.artist)
+      formData.append('track', data.track)
+      return await $axios.$post<IApi['track']['post']['res']>(`track`, formData)
+    },
     delete: async (id: string) =>
       await $axios.$delete<IApi['track']['delete']['res']>(`track/${id}`),
   },

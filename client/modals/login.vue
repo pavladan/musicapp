@@ -26,7 +26,7 @@
         <vs-button
           block
           @click="login()"
-          :loading="$store.getters['auth/authStatus'] === 'loading'"
+          :loading="isAuthLoading"
         >
           Sign In
         </vs-button>
@@ -57,6 +57,7 @@ export default {
         val || modals.close()
       },
     },
+    isAuthLoading:()=>auth.authStatus === 'loading'
   },
 
   methods: {

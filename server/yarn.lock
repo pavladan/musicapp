@@ -3917,6 +3917,11 @@ mongodb@^3.1.0:
   optionalDependencies:
     saslprep "^1.0.0"
 
+mongoose-lean-id@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/mongoose-lean-id/-/mongoose-lean-id-0.2.0.tgz#f88a92e65ecd1001f54bf0d1a20dfcc09693ebdc"
+  integrity sha512-ioC++wVTfprE2wh7Baw4jdZ1mCIpK3uw74sWf53enNCKZHVhKsL7fMyB1ryb4SmGwOj4StebTGy7YwimjZ0Qlg==
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"

@@ -5,9 +5,9 @@ import User from "../models/User";
 export default {
   getUser: async (id: string) => User.findById(id).select("-password").exec(),
   getUserPlaylists: async (id: string) => {
-    return Playlist.find({ owner: id }).exec();
+    return Playlist.find({ owner: id }).lean();
   },
   getUserTracks: async (id: string) => {
-    return Track.find({ owner: id }).exec();
+    return Track.find({ owner: id }).lean();
   },
 };

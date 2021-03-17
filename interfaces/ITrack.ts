@@ -26,6 +26,6 @@ export interface ITrack {
 
 export interface ITrackDTO {
   title: string;
-  track: IMulterFile;
+  track: File;
   artist: string;
 }

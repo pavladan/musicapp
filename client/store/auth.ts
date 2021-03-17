@@ -1,5 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import api from '~/utils/api'
+import { $vs } from '~/plugins/vuesax'
 
 @Module({ name: 'auth', stateFactory: true, namespaced: true })
 export default class AuthModule extends VuexModule {
@@ -35,6 +36,12 @@ export default class AuthModule extends VuexModule {
   auth_error() {
     this.status = 'error'
     this.user = null
+    $vs.notification({
+      title: 'Error',
+      text: 'Authentication error',
+      progress: 'auto',
+      color: 'danger',
+    })
   }
 
   @Mutation
@@ -60,8 +67,12 @@ export default class AuthModule extends VuexModule {
   @Action
   async logout() {
     this.auth_request()
-    await api.auth.logout()
-    this.logout_success()
+    try {
+      await api.auth.logout()
+      this.logout_success()
+    } catch (err) {
+      this.auth_error()
+    }
   }
 
   @Action

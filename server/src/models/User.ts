@@ -1,7 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { IUser } from "../../../interfaces/IUser";
+const mongooseLeanId = require("mongoose-lean-id");
 
-const ThirdPartyProviderSchema = new Schema({
+const thirdPartyProviderSchema = new Schema({
   provider_name: {
     type: String,
     default: null,
@@ -16,7 +17,7 @@ const ThirdPartyProviderSchema = new Schema({
   },
 });
 
-const UserSchema = new Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -49,7 +50,7 @@ const UserSchema = new Schema(
       type: String,
       default: null,
     },
-    third_party_auth: [ThirdPartyProviderSchema],
+    third_party_auth: [thirdPartyProviderSchema],
     date: {
       type: Date,
       default: Date.now,
@@ -57,5 +58,5 @@ const UserSchema = new Schema(
   },
   { strict: false }
 );
-
-export default mongoose.model<IUser & Document>("User", UserSchema);
+userSchema.plugin(mongooseLeanId);
+export default mongoose.model<IUser & Document>("User", userSchema);

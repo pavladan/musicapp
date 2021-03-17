@@ -34,7 +34,7 @@
       </div>
     </div>
     <div :class="`file ${isFilesExist ? 'exist' : ''}`">
-      <span class="file-label" v-html='fileContainerLabel' />
+      <span class="file-label" v-html="fileContainerLabel" />
       <input
         ref="fileInput"
         type="file"
@@ -49,10 +49,10 @@
         <vs-button
           block
           @click="uploadFile()"
-          :loading="isLoading"
+          :loading="loading"
           :disabled="
             !isFilesExist ||
-            files.some((file) => !file.title || !file.artist || !file.file)
+            files.some((file) => !file.title || !file.artist || !file.track)
           "
         >
           Upload
@@ -63,46 +63,25 @@
 </template>
 
 <script>
-import { modals } from '@/store'
-import api from '@/utils/api'
+import { modals, tracks } from '@/store'
 
 export default {
   data: () => ({
     files: [],
-    isLoading: false,
   }),
   methods: {
     async uploadFile() {
-      this.isLoading = true
-      try {
-        await Promise.all(
-          this.files.map((file) => {
-            const formData = new FormData()
-            formData.append('title', file.title)
-            formData.append('artist', file.artist)
-            formData.append('track', file.file)
-            return api.track.add(formData)
-          })
-        )
-        this.isLoading = false
-        modals.close()
-        this.files = []
-      } catch (err) {
-        this.isLoading = false
-        this.$vs.notification({
-          title: 'Error',
-          text: 'Track adding error',
-          progress: 'auto',
-          color: 'danger',
-        })
-      }
+      await tracks.addTracks(this.files)
+      if (tracks.errorMessage) return
+      modals.close()
+      this.files = []
     },
     addFiles(files) {
       files.forEach((file) => {
         const matchName = file.name.match(/(.*)\..+$/)
         this.files.push({
           id: this.files.length,
-          file,
+          track: file,
           fileObjectUrl: URL.createObjectURL(file),
           title: matchName ? matchName[1] : '',
           artist: '',
@@ -133,6 +112,7 @@ export default {
           or click to browse`
         : `Add more files`
     },
+    loading: () => tracks.loading,
   },
 }
 </script>
@@ -162,7 +142,7 @@ export default {
   justify-content: center;
   align-items: center;
   transition: var(--transition);
-  &.exist{
+  &.exist {
     min-height: 50px;
   }
   &:hover {

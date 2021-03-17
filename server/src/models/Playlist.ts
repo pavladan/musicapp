@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { IPlaylist } from "../../../interfaces/IPlaylist";
+const mongooseLeanId = require("mongoose-lean-id");
 
 const playlistSchema = new Schema({
   state: {
@@ -46,5 +47,6 @@ const playlistSchema = new Schema({
     ref: "User",
   },
 });
+playlistSchema.plugin(mongooseLeanId);
 
 export default mongoose.model<IPlaylist & Document>("Playlist", playlistSchema);

@@ -24,6 +24,7 @@
     "ffprobe-static": "^3.0.0",
     "fs-extra": "^9.1.0",
     "mongoose": "^5.11.15",
+    "mongoose-lean-id": "^0.2.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "node-media-server": "^2.2.4",

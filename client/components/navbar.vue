@@ -8,7 +8,7 @@
     <vs-navbar-item :active="this.$route.path === '/'" to="/">
       Home
     </vs-navbar-item>
-    <template v-if="$store.getters['auth/isAuthenticated']">
+    <template v-if="isAuth">
       <vs-navbar-item
         :active="this.$route.path.includes('/collection')"
         to="/collection"
@@ -17,7 +17,7 @@
       </vs-navbar-item>
     </template>
     <template #right>
-      <template v-if="$store.getters['auth/isAuthenticated']">
+      <template v-if="isAuth">
         <vs-button transparent @click="logout()" :key="'logout'"
           >Logout</vs-button
         >
@@ -43,6 +43,9 @@ export default {
       auth.logout()
     },
   },
+  computed:{
+    isAuth:()=>auth.isAuthenticated
+  }
 }
 </script>
 

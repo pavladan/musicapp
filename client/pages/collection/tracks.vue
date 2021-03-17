@@ -2,33 +2,23 @@
   <div>
     <div class="item">
       <h2 class="title">Tracks</h2>
-      <vs-button
-        icon
-        gradient
-        circle
-        @click="$store.commit('modals/open', 'add-track')"
-      >
+      <vs-button icon gradient circle @click="openAddTrackModal()">
         <i class="bx bx-plus"></i>
       </vs-button>
     </div>
     <vs-table>
       <template #thead>
         <vs-tr>
+          <vs-th> # </vs-th>
           <vs-th
             sort
-            @click="allTracks = $vs.sortData($event, allTracks, 'id')"
-          >
-            #
-          </vs-th>
-          <vs-th
-            sort
-            @click="allTracks = $vs.sortData($event, allTracks, 'title')"
+            @click="sortedTracks = $vs.sortData($event, tracks, 'title')"
           >
             Title
           </vs-th>
           <vs-th
             sort
-            @click="allTracks = $vs.sortData($event, allTracks, 'artist')"
+            @click="sortedTracks = $vs.sortData($event, tracks, 'artist')"
           >
             Artist
           </vs-th>
@@ -40,9 +30,9 @@
       <template #tbody>
         <div class="table_body_loader" ref="bodyContent"></div>
         <vs-tr
-          v-if="!musicLoading"
+          v-if="!loading"
           :key="i"
-          v-for="(tr, i) in $vs.getSearch(allTracks, search)"
+          v-for="(tr, i) in sortedTracks"
           :data="tr"
         >
           <vs-td>
@@ -60,7 +50,7 @@
               danger
               transparent
               circle
-              @click="deleteTrack(tr._id)"
+              @click="deleteTrack(tr.id)"
               size="small"
             >
               <i class="bx bxs-trash"></i>
@@ -78,60 +68,36 @@
 
 <script>
 import AddTrackModal from '@/modals/add-track'
-import api from '@/utils/api'
 import secondsToHms from '@/utils/secondsToHms'
+import { modals, tracks } from '@/store'
 let tableLoader
 
 export default {
   components: { AddTrackModal },
   data: () => {
     return {
-      search: '',
-      musicLoading: false,
-      allTracks: [],
+      sortedTracks: [],
     }
   },
-  methods: {
-    async getAllTracks() {
-      this.musicLoading = true
-      try {
-        this.allTracks = (await api.user.tracks()).tracks
-        this.allTracks.forEach((track) => {
-          track.durationHms = secondsToHms(track.duration)
-        })
-        this.musicLoading = false
-      } catch (err) {
-        this.musicLoading = false
-        this.$vs.notification({
-          title: 'Error',
-          text: 'Error Fetching Musics',
-          progress: 'auto',
-          color: 'danger',
-        })
-      }
-    },
-    async deleteTrack(id) {
-      this.musicLoading = true
-      try {
-        await api.track.delete(id)
-        this.musicLoading = false
-        await this.getAllTracks()
-      } catch (err) {
-        this.musicLoading = false
-        this.$vs.notification({
-          title: 'Error',
-          text: 'Error Delete Track',
-          progress: 'auto',
-          color: 'danger',
-        })
-      }
-    },
+  computed: {
+    tracks: () =>
+      tracks.tracks.map((track) => {
+        return { ...track, durationHms: secondsToHms(track.duration) }
+      }),
+    loading: () => tracks.loading,
   },
-  created() {
-    this.getAllTracks()
+  methods: {
+    deleteTrack: id=>tracks.deleteTrack(id),
+    openAddTrackModal: () => modals.open('add-track'),
+  },
+  async created() {
+      await tracks.update()
   },
   watch: {
-    musicLoading: function (value) {
+    tracks(value){
+      this.sortedTracks = value
+    },
+    loading: function (value) {
       if (value) {
         tableLoader = this.$vs.loading({
           target: this.$refs.bodyContent,

@@ -1,13 +1,13 @@
 import Track from "../models/Track";
 import fsPromises from "fs/promises";
-import { ITrackDTO } from "../../../interfaces/ITrack";
+import { ITrack } from "../../../interfaces/ITrack";
 import { BadRequestError } from "../utils/BadRequestError";
 import config from "../config";
 import ERRORS from "../constants/ERRORS";
 const ffprobe = require("ffprobe");
 
 export default {
-  addNewTrack: async (data: ITrackDTO & { owner: string }) => {
+  addNewTrack: async (data: Partial<ITrack> & { owner: string }) => {
     const fileInfo = await ffprobe(data.track.path, { path: config.ffprobe });
     const duration = fileInfo.streams[0].duration;
     const track = new Track({ ...data, duration });
@@ -15,7 +15,7 @@ export default {
   },
 
   getTrackInfo: async (id: string) => {
-    return Track.findById(id).populate("owner").exec();
+    return Track.findById(id).populate("owner").lean();
   },
 
   getTrack: async (id: string) => {
