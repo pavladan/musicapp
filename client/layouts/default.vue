@@ -15,6 +15,11 @@ import { auth } from '@/store'
 
 export default {
   components: { Navbar, LoginModal },
+  head: {
+    bodyAttrs: {
+      'vs-theme': 'dark',
+    },
+  },
   created() {
     auth.checkLogin()
     this.$axios.interceptors.response.use(undefined, async (err) => {
@@ -22,11 +27,11 @@ export default {
         await auth.logout()
         await this.$router.replace('/')
       }
-      if (err.response.status === 403){
+      if (err.response.status === 403) {
       }
       throw err
     })
-  }
+  },
 }
 </script>
 

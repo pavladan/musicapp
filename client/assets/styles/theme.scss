@@ -1,5 +1,5 @@
-:root{
-  --transition-duration: .25s;
+:root {
+  --transition-duration: 0.25s;
   --transition-timing-function: ease;
   --transition: all var(--transition-duration) var(--transition-timing-function);
 }
