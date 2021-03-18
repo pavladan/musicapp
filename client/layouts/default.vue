@@ -8,30 +8,37 @@
   </div>
 </template>
 
-<script>
-import Navbar from '@/components/navbar'
-import LoginModal from '@/modals/login'
+<script lang="ts">
 import { auth } from '@/store'
+import { $axios } from '~/utils/api'
+import { Component, Vue } from 'vue-property-decorator'
+import Navbar from '~/components/navbar.vue'
+import LoginModal from '~/modals/login.vue'
+import { $router } from '~/plugins/router'
 
-export default {
-  components: { Navbar, LoginModal },
+@Component({
+  components:{
+    Navbar, LoginModal
+  },
   head: {
     bodyAttrs: {
       'vs-theme': 'dark',
     },
   },
+})
+export default class Default extends Vue {
   created() {
     auth.checkLogin()
-    this.$axios.interceptors.response.use(undefined, async (err) => {
+    $axios.interceptors.response.use(undefined, async (err) => {
       if (err.response.status === 401) {
         await auth.logout()
-        await this.$router.replace('/')
+        await $router.replace('/')
       }
       if (err.response.status === 403) {
       }
       throw err
     })
-  },
+  }
 }
 </script>
 

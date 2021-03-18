@@ -15,7 +15,7 @@
           <i class="bx bxs-lock"></i>
         </template>
       </vs-input>
-      <div class='item'>
+      <div class="item">
         <vs-checkbox v-model="remember">Remember me</vs-checkbox>
         <a href="#">Forgot Password?</a>
       </div>
@@ -23,11 +23,7 @@
 
     <template #footer>
       <div class="footer-dialog">
-        <vs-button
-          block
-          @click="login()"
-          :loading="isAuthLoading"
-        >
+        <vs-button block @click="login()" :loading="isAuthLoading">
           Sign In
         </vs-button>
 
@@ -37,38 +33,35 @@
   </vs-dialog>
 </template>
 
-<script>
+<script lang='ts'>
 import { auth, modals } from '@/store'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  name: 'login-modal',
-  data: () => ({
-    email: '',
-    password: '',
-    remember: false,
-  }),
+@Component
+export default class LoginModal extends Vue{
+  email= ''
+  password= ''
+  remember= false
 
-  computed: {
-    isOpen: {
-      get() {
-        return modals.modalName === 'login'
-      },
-      set(val) {
-        val || modals.close()
-      },
-    },
-    isAuthLoading:()=>auth.authStatus === 'loading'
-  },
+  get isOpen(){
+    return modals.modalName === 'login'
 
-  methods: {
-    login: async function () {
-      const { email, password } = this
-      await auth.login({ email, password })
-      if (auth.authStatus === 'success') {
-        modals.close()
-      }
-    },
-  },
+  }
+  set isOpen(val){
+    val || modals.close()
+  }
+
+  get isAuthLoading(){
+    return auth.authStatus === 'loading'
+  }
+
+  async login () {
+    const { email, password } = this
+    await auth.login({ email, password })
+    if (auth.authStatus === 'success') {
+      modals.close()
+    }
+  }
 }
 </script>
 

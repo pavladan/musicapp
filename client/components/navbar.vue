@@ -5,12 +5,12 @@
         >{{ $config.app_name }}
       </nuxt-link></template
     >
-    <vs-navbar-item :active="this.$route.path === '/'" to="/">
+    <vs-navbar-item :active="$route.path === '/'" to="/">
       Home
     </vs-navbar-item>
     <template v-if="isAuth">
       <vs-navbar-item
-        :active="this.$route.path.includes('/collection')"
+        :active="$route.path.includes('/collection')"
         to="/collection"
       >
         My music
@@ -30,21 +30,22 @@
   </vs-navbar>
 </template>
 
-<script>
+<script lang='ts'>
 import { auth, modals } from '@/store'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  name: 'navbar',
-  methods: {
-    openLogin() {
-      modals.open('login')
-    },
-    logout() {
-      auth.logout()
-    },
-  },
-  computed:{
-    isAuth:()=>auth.isAuthenticated
+@Component
+export default class Navbar extends Vue{
+  openLogin() {
+    modals.open('login')
+  }
+
+  logout() {
+    auth.logout()
+  }
+
+  get isAuth(){
+    return auth.isAuthenticated
   }
 }
 </script>

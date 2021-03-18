@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import api from '~/utils/api'
 import { $vs } from '~/plugins/vuesax'
+import { $router } from '~/plugins/router'
 
 @Module({ name: 'auth', stateFactory: true, namespaced: true })
 export default class AuthModule extends VuexModule {
@@ -69,6 +70,7 @@ export default class AuthModule extends VuexModule {
     this.auth_request()
     try {
       await api.auth.logout()
+      await $router.push('/')
       this.logout_success()
     } catch (err) {
       this.auth_error()

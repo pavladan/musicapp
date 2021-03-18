@@ -62,58 +62,71 @@
   </vs-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { modals, tracks } from '@/store'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  data: () => ({
-    files: [],
-  }),
-  methods: {
-    async uploadFile() {
-      await tracks.addTracks(this.files)
-      if (tracks.errorMessage) return
-      modals.close()
-      this.files = []
-    },
-    addFiles(files) {
-      files.forEach((file) => {
-        const matchName = file.name.match(/(.*)\..+$/)
-        this.files.push({
-          id: this.files.length,
-          track: file,
-          fileObjectUrl: URL.createObjectURL(file),
-          title: matchName ? matchName[1] : '',
-          artist: '',
-        })
+@Component
+export default class AddTrackModal extends Vue {
+  files: {
+    id: number
+    track: File
+    fileObjectUrl: string
+    title: string
+    artist: string
+  }[] = []
+
+  $refs!: {
+    fileInput: HTMLInputElement
+  }
+
+  async uploadFile() {
+    await tracks.addTracks(this.files)
+    if (tracks.errorMessage) return
+    modals.close()
+    this.files = []
+  }
+
+  addFiles(files: File[]) {
+    files.forEach((file) => {
+      const matchName = file.name.match(/(.*)\..+$/)
+      this.files.push({
+        id: this.files.length,
+        track: file,
+        fileObjectUrl: URL.createObjectURL(file),
+        title: matchName ? matchName[1] : '',
+        artist: '',
       })
-      this.$refs.fileInput.value = ''
-    },
-    deleteFile(id) {
-      this.files = this.files.filter((file) => file.id !== id)
-    },
-  },
-  computed: {
-    isOpen: {
-      get() {
-        return modals.modalName === 'add-track'
-      },
-      set(val) {
-        val || modals.close()
-      },
-    },
-    isFilesExist() {
-      return this.files.length !== 0
-    },
-    fileContainerLabel() {
-      return !this.isFilesExist
-        ? `Drag your file(s) here to begin
+    })
+    this.$refs.fileInput.value = ''
+  }
+
+  deleteFile(id: number) {
+    this.files = this.files.filter((file) => file.id !== id)
+  }
+
+  get isOpen() {
+    return modals.modalName === 'add-track'
+  }
+  set isOpen(val) {
+    val || modals.close()
+  }
+
+  get isFilesExist() {
+    return this.files.length !== 0
+  }
+
+  get fileContainerLabel() {
+    return !this.isFilesExist
+      ? `Drag your file(s) here to begin
           <br />
           or click to browse`
-        : `Add more files`
-    },
-    loading: () => tracks.loading,
-  },
+      : `Add more files`
+  }
+
+  get loading() {
+    return tracks.loading
+  }
 }
 </script>
 
