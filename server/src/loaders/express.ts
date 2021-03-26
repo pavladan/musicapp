@@ -1,4 +1,4 @@
-import { ErrorRequestHandler, Express } from "express";
+import express, { ErrorRequestHandler, Express } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import routes from "../api";
@@ -20,6 +20,7 @@ export default (app: Express) => {
   app.use(morgan("dev"));
 
   app.use(config.api.prefix, routes());
+  app.use(config.mediaPrefix, express.static(config.media_path));
 
   app.use((req, res, next) => {
     const err = new BadRequestError("Not Found", 404);

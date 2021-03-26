@@ -15,7 +15,7 @@
           <i class="bx bxs-lock"></i>
         </template>
       </vs-input>
-      <div class="item">
+      <div class='container'>
         <vs-checkbox v-model="remember">Remember me</vs-checkbox>
         <a href="#">Forgot Password?</a>
       </div>
@@ -73,7 +73,7 @@ export default class LoginModal extends Vue{
 }
 .con-form {
   width: 100%;
-  .item {
+  .container {
     display: flex;
     align-items: center;
     justify-content: space-between;

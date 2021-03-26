@@ -4,7 +4,7 @@
       <h4 class="not-margin">Add tracks</h4>
     </template>
 
-    <div class="item" v-for="file in files" :key="file.id">
+    <div class='container' v-for="file in files" :key="file.id">
       #{{ file.id + 1 }}
       <vs-input
         label-placeholder="Title"
@@ -131,7 +131,7 @@ export default class AddTrackModal extends Vue {
 </script>
 
 <style scoped lang="scss">
-.item {
+.container {
   display: flex;
   gap: 5px;
   margin-bottom: 20px;

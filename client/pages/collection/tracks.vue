@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="item">
+    <div class="container">
       <h2 class="title">Tracks</h2>
       <vs-button icon gradient circle @click="openAddTrackModal()">
         <i class="bx bx-plus"></i>
@@ -34,9 +34,45 @@
           v-for="(track, i) in sortedTracks"
           :key="i"
           :data="track"
+          :class="`table-row ${isPlayingTrack(track.id) ? 'playing' : ''}`"
         >
-          <vs-td>
-            {{ i + 1 }}
+          <vs-td :class="`table-item`">
+            <template v-if="isPlayingTrack(track.id)">
+              <vs-button
+                icon
+                transparent
+                circle
+                class="table-row-play"
+                v-if="isPlay"
+                @click="pause()"
+              >
+                <i class="bx bx-pause" />
+              </vs-button>
+              <vs-button
+                icon
+                transparent
+                circle
+                class="table-row-play"
+                v-else
+                @click="play()"
+              >
+                <i class="bx bx-play" />
+              </vs-button>
+            </template>
+            <template v-else>
+              <span class="table-row-number">
+                {{ i + 1 }}
+              </span>
+              <vs-button
+                icon
+                transparent
+                circle
+                class="table-row-play"
+                @click="playTrackById(i)"
+              >
+                <i class="bx bx-play" />
+              </vs-button>
+            </template>
           </vs-td>
           <vs-td>
             {{ track.title }}
@@ -68,7 +104,7 @@
 
 <script lang="ts">
 import secondsToHms from '~/utils/secondsToHms'
-import { modals, tracks } from '@/store'
+import { modals, player, tracks } from '@/store'
 import { ITrack } from '../../../interfaces/ITrack'
 import { $vs } from '~/plugins/vuesax'
 import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -95,6 +131,18 @@ export default class Tracks extends Vue {
     return tracks.loading
   }
 
+  get playingTrackId() {
+    return player.hasPlaylist && player.currentTrack.id
+  }
+
+  get isPlay() {
+    return player.hasPlaylist && !player.paused
+  }
+
+  isPlayingTrack(id: string) {
+    return this.playingTrackId === id
+  }
+
   deleteTrack(id: string) {
     tracks.deleteTrack(id)
   }
@@ -107,13 +155,23 @@ export default class Tracks extends Vue {
     await tracks.update()
   }
 
+  playTrackById(i: number) {
+    player.loadPlaylist({ tracks: this.sortedTracks, index: i })
+  }
+  play() {
+    player.play()
+  }
+  pause() {
+    player.pause()
+  }
+
   @Watch('tracks')
-  onTrackChanged(value: ITrack[]){
+  onTrackChanged(value: ITrack[]) {
     this.sortedTracks = value
   }
 
   @Watch('loading')
-  onLoadingChanged(value: boolean){
+  onLoadingChanged(value: boolean) {
     if (value) {
       tableLoader = $vs.loading({
         target: this.$refs.bodyContent,
@@ -127,8 +185,8 @@ export default class Tracks extends Vue {
 }
 </script>
 
-<style scoped>
-.item {
+<style scoped lang="scss">
+.container {
   display: flex;
   align-items: center;
 }
@@ -140,5 +198,41 @@ export default class Tracks extends Vue {
   width: 100%;
   height: 100px;
   z-index: -1;
+}
+.table {
+  &-row {
+    &.playing {
+      background: rgb(var(--vs-gray-1));
+      .table-row-play {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+    &-number {
+      transition: var(--transition);
+      opacity: 1;
+    }
+    &-play {
+      visibility: hidden;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      transition: var(--transition);
+      opacity: 0;
+    }
+    &:hover {
+      .table-row-play {
+        visibility: visible;
+        opacity: 1;
+      }
+      .table-row-number {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+  }
+  &-item {
+    position: relative;
+  }
 }
 </style>

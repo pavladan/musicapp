@@ -4,6 +4,7 @@
     <div class="content">
       <Nuxt />
     </div>
+    <player />
     <login-modal />
   </div>
 </template>
@@ -15,10 +16,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import Navbar from '~/components/navbar.vue'
 import LoginModal from '~/modals/login.vue'
 import { $router } from '~/plugins/router'
+import Player from '~/components/player.vue'
 
 @Component({
   components:{
-    Navbar, LoginModal
+    Navbar, LoginModal, Player
   },
   head: {
     bodyAttrs: {
@@ -45,5 +47,6 @@ export default class Default extends Vue {
 <style scoped>
 .content {
   padding-top: 44px;
+  min-height: 100vh;
 }
 </style>

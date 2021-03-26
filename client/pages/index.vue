@@ -1,5 +1,5 @@
 <template>
-  <player />
+
 </template>
 <script>
 import Player from '@/components/player'

@@ -10,7 +10,8 @@ export default {
   addNewTrack: async (data: Partial<ITrack> & { owner: string }) => {
     const fileInfo = await ffprobe(data.track.path, { path: config.ffprobe });
     const duration = fileInfo.streams[0].duration;
-    const track = new Track({ ...data, duration });
+    const mediaUrl = `${config.host}:${config.port}${config.mediaPrefix}/${data.track.filename}`;
+    const track = new Track({ ...data, duration, mediaUrl });
     return track.save();
   },
 

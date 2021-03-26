@@ -61,13 +61,14 @@ export default (app: Router) => {
         const id = req.params[ID_PARAM];
 
         const { file, size } = await trackController.getTrack(id);
+        console.log(file, size);
 
         res.writeHead(200, {
           "Content-Type": "audio/mpeg",
           "Content-Length": size,
           "accept-ranges": "bytes",
         });
-        res.json({ file });
+        res.json(file);
       } catch (err) {
         next(err);
       }

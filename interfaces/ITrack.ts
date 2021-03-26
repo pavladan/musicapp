@@ -22,6 +22,7 @@ export interface ITrack {
   created: Date;
   owner: IUser | string;
   duration: string;
+  mediaUrl: string;
 }
 
 export interface ITrackDTO {

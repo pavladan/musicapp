@@ -29,6 +29,10 @@ const trackSchema = new Schema({
     required: true,
     default: "0",
   },
+  mediaUrl: {
+    type: String,
+    required: true,
+  },
 });
 trackSchema.plugin(mongooseLeanId);
 

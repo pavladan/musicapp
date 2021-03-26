@@ -13,7 +13,9 @@ dotenv.config({
 const allowOrigin = true;
 
 export default {
+  host: process.env.HOST || "http://localhost",
   port: +process.env.API_PORT || +process.env.PORT || 4000,
+  mediaPrefix: "/uploads",
   databaseURL: process.env.MONGO_URI,
   media_path: path.resolve("./uploads"),
   ffprobe: ffprobeStatic.path,
