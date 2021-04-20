@@ -1,4 +1,9 @@
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import {
+  Module,
+  VuexModule,
+  VuexMutation,
+  VuexAction,
+} from 'nuxt-property-decorator'
 import api from '~/utils/api'
 import { $vs } from '~/plugins/vuesax'
 import { $router } from '~/plugins/router'
@@ -23,17 +28,17 @@ export default class AuthModule extends VuexModule {
     return this.status
   }
 
-  @Mutation
+  @VuexMutation
   auth_request() {
     this.status = 'loading'
   }
-  @Mutation
+  @VuexMutation
   auth_success(user: any) {
     this.status = 'success'
     this.user = user
     localStorage.setItem(this.localStorageUserTitle, JSON.stringify(user))
   }
-  @Mutation
+  @VuexMutation
   auth_error() {
     this.status = 'error'
     this.user = null
@@ -45,14 +50,14 @@ export default class AuthModule extends VuexModule {
     })
   }
 
-  @Mutation
+  @VuexMutation
   logout_success() {
     this.user = null
     localStorage.removeItem(this.localStorageUserTitle)
     this.status = 'success'
   }
 
-  @Action
+  @VuexAction
   async login(user: { email: string; password: string }) {
     this.auth_request()
     try {
@@ -65,7 +70,7 @@ export default class AuthModule extends VuexModule {
     }
   }
 
-  @Action
+  @VuexAction
   async logout() {
     this.auth_request()
     try {
@@ -77,7 +82,7 @@ export default class AuthModule extends VuexModule {
     }
   }
 
-  @Action
+  @VuexAction
   async checkLogin() {
     this.auth_request()
     try {

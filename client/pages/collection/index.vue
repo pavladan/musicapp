@@ -5,7 +5,7 @@ import { $router } from '~/plugins/router'
 
 export default {
   async beforeCreate() {
-    await $router.replace('collection/tracks')
+    await $router.replace('/collection/tracks')
   },
 }
 </script>

@@ -1,5 +1,9 @@
 <template>
-  <div :class="`player ${!player.hasPlaylist ? 'hide' : ''} ${!player.paused ? 'playing' : ''}`">
+  <div
+    :class="`player ${!player.hasPlaylist ? 'hide' : ''} ${
+      !player.paused ? 'playing' : ''
+    }`"
+  >
     <div class="progress" @click="seek($event)">
       <div class="progress-bar">
         <div
@@ -60,37 +64,39 @@
     </div>
     <div class="track-info">
       <div class="cover">
-        <empty-cover />
+        <empty-track-cover />
       </div>
-      <div class="cred" v-if='!!player.currentTrack'>
+      <div class="cred" v-if="!!player.currentTrack">
         <div class="title">{{ player.currentTrack.title }}</div>
-        <div class="artist">{{ player.currentTrack.artist}}</div>
+        <div class="artist">{{ player.currentTrack.artist }}</div>
       </div>
     </div>
 
-    <div class='controls'>
-      <vs-button relief icon  @click='openPlaylist=true'>
+    <div class="controls">
+      <vs-button relief icon @click="openPlaylist = true">
         <i class="bx bx-menu" />
       </vs-button>
     </div>
-    <playlist-sidebar v-model='openPlaylist' />
+    <sidebar v-model="openPlaylist">
+      <template #header>Now playing</template>
+      <track-list :tracks="player.playlist" />
+    </sidebar>
   </div>
-
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
 import { player } from '~/store'
 import { ITrack } from '../../interfaces/ITrack'
-import PlaylistSidebar from '~/components/playlistSidebar.vue'
-import EmptyCover from '~/components/emptyCover.vue'
+import Sidebar from '~/components/sidebar.vue'
+import EmptyTrackCover from '~/components/emptyTrackCover.vue'
+import TrackList from '~/components/trackList.vue'
 @Component({
-  components: { EmptyCover, PlaylistSidebar }
+  components: { EmptyTrackCover, Sidebar, TrackList },
 })
 export default class Player extends Vue {
-  openPlaylist=false
+  openPlaylist = false
   @Ref() readonly audio!: HTMLAudioElement
-
 
   mounted() {
     this.audio.addEventListener('loadstart', () => {
@@ -114,7 +120,7 @@ export default class Player extends Vue {
   seek(event: MouseEvent) {
     const target = event.currentTarget as HTMLElement
     this.audio.currentTime =
-      (event.offsetX / target.offsetWidth) * this.audio.duration
+      (event.offsetX / target.offsetWidth) * (this.audio.duration || 0)
   }
 
   @Watch('player.currentTrack')
@@ -152,8 +158,8 @@ export default class Player extends Vue {
     transform: translateY(100%);
     visibility: hidden;
   }
-  &.playing{
-    .track-info .cover{
+  &.playing {
+    .track-info .cover {
       animation: rotate-center 5s linear infinite both;
     }
   }
@@ -193,17 +199,17 @@ export default class Player extends Vue {
   .track-info {
     display: flex;
     align-items: center;
-  flex: 1;
+    flex: 1;
 
     .cred {
       display: flex;
       flex-direction: column;
       margin-left: 10px;
-      .title{
-        font-weight: 500;
+      .title {
       }
-      .artist{
-        font-size: .8em;
+      .artist {
+        font-size: 0.8em;
+        color: rgba(var(--vs-text), 0.5);
       }
     }
   }
@@ -217,5 +223,4 @@ export default class Player extends Vue {
     transform: rotate(360deg);
   }
 }
-
 </style>

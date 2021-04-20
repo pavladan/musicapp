@@ -22,6 +22,9 @@ const playlistSchema = new Schema({
     required: true,
     minLength: 2,
   },
+  cover: {
+    type: Object,
+  },
   trackList: {
     type: [
       {

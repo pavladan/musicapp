@@ -16,7 +16,7 @@
 <script lang="ts">
 import { auth } from '@/store'
 import { $axios } from '~/utils/api'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import Navbar from '~/components/navbar.vue'
 import LoginModal from '~/modals/login.vue'
 import { $router } from '~/plugins/router'

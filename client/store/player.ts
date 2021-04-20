@@ -1,6 +1,6 @@
-import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
 import { ITrack } from '~/../interfaces/ITrack'
 import { player } from '~/store/index'
+import { Module, VuexModule, VuexMutation } from 'nuxt-property-decorator'
 
 @Module({ name: 'player', stateFactory: true, namespaced: true })
 export default class PlayerModule extends VuexModule {
@@ -29,7 +29,7 @@ export default class PlayerModule extends VuexModule {
     return true
   }
 
-  @Mutation
+  @VuexMutation
   stop() {
     this.playlist = []
     this.trackIndex = -1
@@ -37,7 +37,7 @@ export default class PlayerModule extends VuexModule {
     this.paused = true
   }
 
-  @Mutation
+  @VuexMutation
   loadPlaylist({ tracks, index = 0 }: { tracks: ITrack[]; index: number }) {
     this.playlist = tracks
     this.trackIndex = index
@@ -45,23 +45,23 @@ export default class PlayerModule extends VuexModule {
     this.paused = false
   }
 
-  @Mutation
+  @VuexMutation
   setTime(time: number) {
     this.timestamp = time
   }
 
-  @Mutation
+  @VuexMutation
   setVolume(volume: number) {
     if (volume < 0 || volume > 1) return
     this.volume = volume
   }
 
-  @Mutation
+  @VuexMutation
   toggleMute() {
     this.muted = !this.muted
   }
 
-  @Mutation
+  @VuexMutation
   nextTrack() {
     if (!player.existNextTrack) return (this.paused = true)
     if (this.trackIndex === this.playlist.length - 1 && this.isRepeat)
@@ -69,34 +69,34 @@ export default class PlayerModule extends VuexModule {
     return this.trackIndex++
   }
 
-  @Mutation
+  @VuexMutation
   prevTrack() {
     if (!player.existPrevTrack) return
     if (this.trackIndex === 0) return (this.timestamp = 0)
     return this.trackIndex--
   }
 
-  @Mutation
+  @VuexMutation
   play() {
     this.paused = false
   }
 
-  @Mutation
+  @VuexMutation
   pause() {
     this.paused = true
   }
 
-  @Mutation
+  @VuexMutation
   setLoading(loading: boolean) {
     this.loading = loading
   }
 
-  @Mutation
+  @VuexMutation
   toggleRepeat() {
     this.isRepeat = !this.isRepeat
   }
 
-  @Mutation
+  @VuexMutation
   setTrackIndex(index: number) {
     this.trackIndex = index
   }

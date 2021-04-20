@@ -21,6 +21,10 @@ export default {
     get: async () => await $axios.$get<IApi['user']['get']['res']>('user'),
     tracks: async () =>
       await $axios.$get<IApi['user']['tracks']['get']['res']>('user/tracks'),
+    playlists: async () =>
+      await $axios.$get<IApi['user']['playlists']['get']['res']>(
+        'user/playlists'
+      ),
   },
   track: {
     add: async (data: IApi['track']['post']['req']) => {
@@ -32,5 +36,28 @@ export default {
     },
     delete: async (id: string) =>
       await $axios.$delete<IApi['track']['delete']['res']>(`track/${id}`),
+  },
+  playlist: {
+    add: async (playlistData: IPlaylistDTOClient) => {
+      return await $axios.$post<IApi['playlist']['add']['post']['res']>(
+        'playlist/add',
+        playlistData
+      )
+    },
+    delete: async (id: string) =>
+      await $axios.$delete<IApi['playlist']['delete']['res']>(`playlist/${id}`),
+    edit: async (id: string, playlistData: Partial<IPlaylistDTOClient>) => {
+      let data: any = playlistData
+      if (playlistData.cover) {
+        data = new FormData()
+        data.append('cover', playlistData.cover)
+      }
+      return await $axios.$put<IApi['playlist']['put']['res']>(
+        `playlist/${id}`,
+        data
+      )
+    },
+    get: async (id: string) =>
+      await $axios.$get<IApi['playlist']['get']['res']>(`playlist/${id}`),
   },
 }

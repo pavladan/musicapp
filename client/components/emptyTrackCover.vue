@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'emptyCover'
+  name: 'emptyTrackCover'
 }
 </script>
 
