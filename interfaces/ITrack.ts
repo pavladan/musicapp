@@ -1,18 +1,5 @@
 import { IUser } from "./IUser";
-import { Readable } from "stream";
-
-interface IMulterFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  stream: Readable;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer: Buffer;
-}
+import { IMulterFile } from "./IMulterFile";
 
 export interface ITrack {
   id: string;

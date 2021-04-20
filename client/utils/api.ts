@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
 import { IApi } from '@/../interfaces/IApi'
+import { IPlaylistDTOClient } from '../../interfaces/IPlaylist'
 
 let $axios: NuxtAxiosInstance
 

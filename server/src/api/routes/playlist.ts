@@ -6,6 +6,8 @@ import Playlist from "../../models/Playlist";
 import isAuth from "../middlewares/isAuth";
 import players from "../../stores/players";
 import { IApi } from "../../../../interfaces/IApi";
+import multerImage from "../../config/multerImage";
+import resizeImage from "../middlewares/resizeImage";
 
 const route = Router();
 
@@ -32,6 +34,8 @@ export default (app: Router) => {
   route.post(
     "/add",
     isAuth,
+    multerImage.single("cover"),
+    resizeImage,
     async (
       req: Request<{}, {}, IApi["playlist"]["add"]["post"]["req"]>,
       res,
@@ -40,11 +44,14 @@ export default (app: Router) => {
       try {
         const playlist = await playlistController.add({
           title: req.body.title,
+          cover: req.body.cover,
           trackList: req.body.trackList || [],
           owner: req.user.id,
-          state: req.body.state,
         });
-        res.json(<IApi["playlist"]["add"]["post"]["res"]>{ playlist });
+        const playlistLean = await playlistController.get(playlist.id);
+        res.json(<IApi["playlist"]["add"]["post"]["res"]>{
+          playlist: playlistLean,
+        });
       } catch (err) {
         next(err);
       }
@@ -77,6 +84,8 @@ export default (app: Router) => {
   route.put(
     `/:${ID_PARAM}`,
     isOwner(Playlist, ID_PARAM),
+    multerImage.single("cover"),
+    resizeImage,
     async (
       req: Request<{ [ID_PARAM]: string }, {}, IApi["playlist"]["put"]["req"]>,
       res,
@@ -84,6 +93,7 @@ export default (app: Router) => {
     ) => {
       try {
         const id = req.params[ID_PARAM];
+
         const playlist = await playlistController.edit(id, { ...req.body });
         res.json(<IApi["playlist"]["put"]["res"]>{
           message: MESS.EDIT,

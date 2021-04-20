@@ -16,7 +16,7 @@ export default class PlayerModule extends VuexModule {
   get hasPlaylist() {
     return this.playlist.length > 0
   }
-  get currentTrack() {
+  get currentTrack(): ITrack | undefined {
     return this.playlist[this.trackIndex]
   }
   get existNextTrack() {

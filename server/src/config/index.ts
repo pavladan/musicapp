@@ -15,9 +15,11 @@ const allowOrigin = true;
 export default {
   host: process.env.HOST || "http://localhost",
   port: +process.env.API_PORT || +process.env.PORT || 4000,
-  mediaPrefix: "/uploads",
+  mediaPrefix: "/audio",
+  imgPrefix: "/img",
   databaseURL: process.env.MONGO_URI,
-  media_path: path.resolve("./uploads"),
+  media_path: path.resolve("./uploads/audio"),
+  img_path: path.resolve("./uploads/img"),
   ffprobe: ffprobeStatic.path,
   api: {
     prefix: process.env.API_PREFIX || "/",

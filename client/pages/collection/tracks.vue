@@ -28,7 +28,9 @@
       </template>
 
       <template #tbody>
-        <div class="table_body_loader" ref="bodyContent"></div>
+        <div class="table_body_loader">
+          <loader v-if='loadingTracks' />
+        </div>
         <vs-tr
           v-if="!loading"
           v-for="(track, i) in sortedTracks"
@@ -93,17 +95,15 @@
             </vs-button>
           </vs-td>
           <vs-td>
-            {{ track.durationHms }}
+            {{ getSecondHms(track.duration)  }}
           </vs-td>
         </vs-tr>
       </template>
     </vs-table>
-    <add-track-modal />
   </div>
 </template>
 
 <script lang="ts">
-import secondsToHms from '~/utils/secondsToHms'
 import { modals, player, tracks } from '@/store'
 import { ITrack } from '../../../interfaces/ITrack'
 import { $vs } from '~/plugins/vuesax'
@@ -112,15 +112,11 @@ import AddTrackModal from '~/modals/add-track.vue'
 let tableLoader: any
 
 @Component({
-  components: { AddTrackModal },
+  components: { Loader },
   middleware: ['authenticated'],
 })
 export default class Tracks extends Vue {
   sortedTracks: ITrack[] = []
-
-  $refs!: {
-    bodyContent: HTMLInputElement
-  }
 
   get tracks() {
     return tracks.tracks.map((track) => {
@@ -132,7 +128,7 @@ export default class Tracks extends Vue {
   }
 
   get playingTrackId() {
-    return player.hasPlaylist && player.currentTrack.id
+    return player.hasPlaylist && player.currentTrack && player.currentTrack.id
   }
 
   get isPlay() {
@@ -148,10 +144,10 @@ export default class Tracks extends Vue {
   }
 
   openAddTrackModal() {
-    modals.open('add-track')
+    modals.open({name: 'add-track'})
   }
 
-  async created() {
+  async fetch() {
     await tracks.update()
   }
 
@@ -195,8 +191,10 @@ export default class Tracks extends Vue {
 }
 .table_body_loader {
   position: absolute;
-  width: 100%;
-  height: 100px;
+  left: 0;
+  right: 0;
+  margin: 0 20px;
+  height: 200px;
   z-index: -1;
 }
 .table {

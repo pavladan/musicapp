@@ -21,6 +21,7 @@ export default (app: Express) => {
 
   app.use(config.api.prefix, routes());
   app.use(config.mediaPrefix, express.static(config.media_path));
+  app.use(config.imgPrefix, express.static(config.img_path));
 
   app.use((req, res, next) => {
     const err = new BadRequestError("Not Found", 404);

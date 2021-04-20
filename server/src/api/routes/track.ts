@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import trackController from "../../controller/track";
-import upload from "../../config/multer";
+import upload from "../../config/multerAudio";
 import isOwner from "../middlewares/isOwner";
 import Track from "../../models/Track";
 import isAuth from "../middlewares/isAuth";
@@ -48,27 +48,6 @@ export default (app: Router) => {
         const id = req.params[ID_PARAM];
         const track = await trackController.getTrackInfo(id);
         res.json(<IApi["track"]["get"]["res"]>{ track });
-      } catch (err) {
-        next(err);
-      }
-    }
-  );
-
-  route.get(
-    `/:${ID_PARAM}/file`,
-    async (req: Request<{ [ID_PARAM]: string }>, res, next) => {
-      try {
-        const id = req.params[ID_PARAM];
-
-        const { file, size } = await trackController.getTrack(id);
-        console.log(file, size);
-
-        res.writeHead(200, {
-          "Content-Type": "audio/mpeg",
-          "Content-Length": size,
-          "accept-ranges": "bytes",
-        });
-        res.json(file);
       } catch (err) {
         next(err);
       }

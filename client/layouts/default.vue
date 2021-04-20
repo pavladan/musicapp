@@ -5,7 +5,11 @@
       <Nuxt />
     </div>
     <player />
-    <login-modal />
+    <div class='modals'>
+      <login-modal />
+      <add-track />
+      <add-tracks-to-playlist />
+    </div>
   </div>
 </template>
 
@@ -17,9 +21,13 @@ import Navbar from '~/components/navbar.vue'
 import LoginModal from '~/modals/login.vue'
 import { $router } from '~/plugins/router'
 import Player from '~/components/player.vue'
+import AddTracksToPlaylist from '~/modals/add-tracks-to-playlist.vue'
+import AddTrack from '~/modals/add-track.vue'
 
 @Component({
   components:{
+    AddTrack,
+    AddTracksToPlaylist,
     Navbar, LoginModal, Player
   },
   head: {
@@ -46,7 +54,7 @@ export default class Default extends Vue {
 
 <style scoped>
 .content {
-  padding-top: 44px;
+  padding: 44px 20px 82px;
   min-height: 100vh;
 }
 </style>
