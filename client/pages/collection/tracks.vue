@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <h2 class="title">Tracks</h2>
-      <vs-button icon gradient circle @click="openAddTrackModal()">
+      <vs-button icon gradient circle @click="openAddTrackModal()" title='Add track'>
         <i class="bx bx-plus"></i>
       </vs-button>
     </div>
@@ -32,7 +32,7 @@
           <loader v-if='loadingTracks' />
         </div>
         <vs-tr
-          v-if="!loading"
+          v-if="!loadingTracks"
           v-for="(track, i) in sortedTracks"
           :key="i"
           :data="track"
@@ -106,10 +106,9 @@
 <script lang="ts">
 import { modals, player, tracks } from '@/store'
 import { ITrack } from '../../../interfaces/ITrack'
-import { $vs } from '~/plugins/vuesax'
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import AddTrackModal from '~/modals/add-track.vue'
-let tableLoader: any
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import Loader from '~/components/loader.vue'
+import secondsToHms from '~/utils/secondsToHms'
 
 @Component({
   components: { Loader },
@@ -119,11 +118,9 @@ export default class Tracks extends Vue {
   sortedTracks: ITrack[] = []
 
   get tracks() {
-    return tracks.tracks.map((track) => {
-      return { ...track, durationHms: secondsToHms(track.duration) }
-    })
+    return tracks.tracks
   }
-  get loading() {
+  get loadingTracks() {
     return tracks.loading
   }
 
@@ -166,17 +163,9 @@ export default class Tracks extends Vue {
     this.sortedTracks = value
   }
 
-  @Watch('loading')
-  onLoadingChanged(value: boolean) {
-    if (value) {
-      tableLoader = $vs.loading({
-        target: this.$refs.bodyContent,
-        type: 'scale',
-      })
-    } else if (tableLoader) {
-      tableLoader.close()
-      tableLoader = undefined
-    }
+  getSecondHms(second: string){
+    if (!second) return ''
+    return secondsToHms(second)
   }
 }
 </script>

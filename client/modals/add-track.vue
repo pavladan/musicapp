@@ -49,7 +49,7 @@
         <vs-button
           block
           @click="uploadFile()"
-          :loading="loading"
+          :loading="loadingTracks"
           :disabled="
             !isFilesExist ||
             files.some((file) => !file.title || !file.artist || !file.track)
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { modals, tracks } from '@/store'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 
 @Component
 export default class AddTrackModal extends Vue {
@@ -124,7 +124,7 @@ export default class AddTrackModal extends Vue {
       : `Add more files`
   }
 
-  get loading() {
+  get loadingTracks() {
     return tracks.loading
   }
 }

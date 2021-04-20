@@ -1,5 +1,5 @@
 import Playlist from "../models/Playlist";
-import { IPlaylistDTO } from "../../../interfaces/IPlaylist";
+import { IPlaylist } from "../../../interfaces/IPlaylist";
 import { ITrack } from "../../../interfaces/ITrack";
 import fsPromises from "fs/promises";
 

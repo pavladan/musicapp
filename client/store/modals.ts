@@ -1,4 +1,4 @@
-import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
+import { Module, VuexModule, VuexMutation } from 'nuxt-property-decorator'
 
 type ModalName = '' | 'login' | 'add-track' | 'add-tracks-to-playlist'
 
@@ -22,7 +22,7 @@ export default class ModalsModule extends VuexModule {
       this.modalData = data
     }
   }
-  @Mutation
+  @VuexMutation
   close() {
     this.modalName = ''
     this.modalData = {}
